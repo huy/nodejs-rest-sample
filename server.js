@@ -12,9 +12,10 @@ app.get('/', function(req, res){
 });
 
 app.post('/', function(req, res) {
+
     console.log("got req: " + req);
     console.log("got req.params: " + req.params);
-    console.log("got req.query: " + req.query);
+    console.log("got req.query: " + JSON.stringify(req.query, null, '\t'));
     console.log("got req.body: " + req.body);
 
     res.send("OK");

@@ -11,7 +11,7 @@ var app = express.createServer();
 app.use(express.bodyParser());
 
 app.get('/', function(req, res){
-    res.send('Hello World');
+    res.json({"status": 0, "message": "hello world" });
 });
 
 app.post('/', function(req, res) {
@@ -20,7 +20,7 @@ app.post('/', function(req, res) {
     console.log("got req.query: " + JSON.stringify(req.query, null, '\t'));
     console.log("got req.body: " + JSON.stringify(req.body, null, '\t'));
 
-    res.send("OK");
+    res.json({"status": 0, "message": "hello world" });
 });
 
 app.listen(port,ipaddr);

@@ -7,6 +7,8 @@ var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 //  OpenShift sample express application
 var app = require('express').createServer();
 
+app.use(express.bodyParser());
+
 app.get('/', function(req, res){
     res.send('Hello World');
 });

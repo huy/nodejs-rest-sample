@@ -13,6 +13,7 @@ app.get('/', function(req, res){
 
 app.post('/', function(req, res) {
     console.log("got" + req);
+    res.send("OK");
 });
 
 app.listen(port,ipaddr);

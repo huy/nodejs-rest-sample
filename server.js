@@ -36,11 +36,13 @@ var url = "mongodb://" + process.env.OPENSHIFT_NOSQL_DB_USERNAME +
        process.env.OPENSHIFT_APP_NAME;
 
 var dbconn;
-
 mongo.connect(url, function(err, conn) {
   conn.on('error', function(err) {
-    return console.log('%s: Mongo connect error %s',Date(Date.now()), err);
+    console.log('%s: Mongo connect error %s',Date(Date.now()), err);
+    return;
   });
+
+  console.log('%s: Mongo connect success',Date(Date.now()));
   dbconn = conn;
 });
 

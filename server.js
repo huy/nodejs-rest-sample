@@ -11,6 +11,10 @@ app.get('/', function(req, res){
     res.send('Hello World');
 });
 
+app.post('/', function(req, res) {
+    console.log("got" + req);
+});
+
 app.listen(port,ipaddr);
 
 console.log("Server running at http://" + ipaddr + ":" + port + "/");

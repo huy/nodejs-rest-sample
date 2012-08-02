@@ -14,11 +14,15 @@ app.get('/', function(req, res){
     res.json({"status": 0, "message": "hello world" });
 });
 
+function log(message, obj) {
+  console.log(message +  ":" + JSON.stringify(obj, null, '\t'));
+}
+
 app.post('/', function(req, res) {
 
-    console.log("got req.params: " + req.params);
-    console.log("got req.query: " + JSON.stringify(req.query, null, '\t'));
-    console.log("got req.body: " + JSON.stringify(req.body, null, '\t'));
+    log("got req.params: ", req.params);
+    log("got req.query: ", req.query);
+    log("got req.body: ", req.body);
 
     res.json({"status": 0, "message": "hello world" });
 });
@@ -26,3 +30,4 @@ app.post('/', function(req, res) {
 app.listen(port,ipaddr);
 
 console.log("Server running at http://" + ipaddr + ":" + port + "/");
+

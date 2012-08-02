@@ -27,6 +27,23 @@ app.post('/notification', function(req, res) {
     res.json({"id": 777, "status": 0, "message": "create new notification" });
 });
 
+var mongo = require('mongodb');
+
+var url = "mongodb://" + process.env.OPENSHIFT_NOSQL_DB_USERNAME +
+       ":" + process.env.OPENSHIFT_NOSQL_DB_PASSWORD + "@" +
+       process.env.OPENSHIFT_NOSQL_DB_HOST + ":" +
+       process.env.OPENSHIFT_NOSQL_DB_PORT + "/" +
+       process.env.OPENSHIFT_APP_NAME;
+
+var dbconn;
+
+mongo.connect(url, function(err, conn) {
+  conn.on('error', function(err) {
+    return console.log('%s: Mongo connect error %s',Date(Date.now()), err);
+  });
+  dbconn = conn;
+});
+
 app.listen(port,ipaddr);
 
 console.log("Server running at http://" + ipaddr + ":" + port + "/");

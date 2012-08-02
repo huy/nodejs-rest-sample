@@ -13,10 +13,9 @@ app.get('/', function(req, res){
 
 app.post('/', function(req, res) {
 
-    console.log("got req: " + JSON.stringify(req, null, '\t'));
     console.log("got req.params: " + req.params);
     console.log("got req.query: " + JSON.stringify(req.query, null, '\t'));
-    console.log("got req.body: " + req.body);
+    console.log("got req.body: " + JSON.stringify(req.body, null, '\t');
 
     res.send("OK");
 });

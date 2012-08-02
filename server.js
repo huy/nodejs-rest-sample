@@ -5,7 +5,8 @@ var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP || "127.0.0.1";
 var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 
 //  OpenShift sample express application
-var app = require('express').createServer();
+var express = require('express');
+var app = express.createServer();
 
 app.use(express.bodyParser());
 

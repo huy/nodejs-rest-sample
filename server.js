@@ -10,21 +10,21 @@ var app = express.createServer();
 
 app.use(express.bodyParser());
 
-app.get('/', function(req, res){
-    res.json({"status": 0, "message": "hello world" });
+app.get('/notification/:id', function(req, res){
+    res.json({"id" :  req.params.id ,"status": 0, "message": "get notification" });
 });
 
 function log(message, obj) {
-  console.log(message +  ":" + JSON.stringify(obj, null, '\t'));
+  console.log(message +  ": " + JSON.stringify(obj, null, '\t'));
 }
 
-app.post('/', function(req, res) {
+app.post('/notification', function(req, res) {
 
-    log("got req.params: ", req.params);
-    log("got req.query: ", req.query);
-    log("got req.body: ", req.body);
+    log("got req.params", req.params);
+    log("got req.query", req.query);
+    log("got req.body", req.body);
 
-    res.json({"status": 0, "message": "hello world" });
+    res.json({"id": 777, "status": 0, "message": "create new notification" });
 });
 
 app.listen(port,ipaddr);

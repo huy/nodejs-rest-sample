@@ -10,13 +10,20 @@ var app = express.createServer();
 
 app.use(express.bodyParser());
 
-app.get('/notification/:id', function(req, res){
-    res.json({"id" :  req.params.id ,"status": 0, "message": "get notification" });
-});
-
+// convenient debug function
 function log(message, obj) {
   console.log(message +  ": " + JSON.stringify(obj, null, '\t'));
-}
+};
+
+var db = require('db');
+
+app.get('/notification/:id', function(req, res){
+
+  db.connect(function(conn){
+    log("call db.connect passing conn object", null)});
+
+  res.json({"id" :  req.params.id ,"status": 0, "message": "get notification" });
+});
 
 app.post('/notification', function(req, res) {
 
@@ -25,25 +32,6 @@ app.post('/notification', function(req, res) {
     log("got req.body", req.body);
 
     res.json({"id": 777, "status": 0, "message": "create new notification" });
-});
-
-var mongo = require('mongodb');
-
-var url = "mongodb://" + process.env.OPENSHIFT_NOSQL_DB_USERNAME +
-       ":" + process.env.OPENSHIFT_NOSQL_DB_PASSWORD + "@" +
-       process.env.OPENSHIFT_NOSQL_DB_HOST + ":" +
-       process.env.OPENSHIFT_NOSQL_DB_PORT + "/" +
-       process.env.OPENSHIFT_APP_NAME;
-
-var dbconn;
-mongo.connect(url, function(err, conn) {
-  conn.on('error', function(err) {
-    console.log('%s: Mongo connect error %s',Date(Date.now()), err);
-    return;
-  });
-
-  console.log('%s: Mongo connect success',Date(Date.now()));
-  dbconn = conn;
 });
 
 app.listen(port,ipaddr);

@@ -15,6 +15,8 @@ function log(message, obj) {
   console.log(message +  ": " + JSON.stringify(obj, null, '\t'));
 };
 
+// add working dir to require.path so node.js can find db.js module
+require.paths.unshift('.');
 var db = require('db');
 
 app.get('/notification/:id', function(req, res){

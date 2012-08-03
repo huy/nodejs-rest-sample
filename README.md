@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Node.js on OpenShift
 ====================
 
@@ -27,3 +28,9 @@ That's it, you can now checkout your application at:
 
     http://nodejs-$yournamespace.rhcloud.com
 
+=======
+nodejs-rest-sample
+==================
+
+sample nodejs restful server
+>>>>>>> 3d557c57ae9db215cd5a8b232bc4dc30cd1dfcd2

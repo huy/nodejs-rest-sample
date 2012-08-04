@@ -26,13 +26,14 @@ app.get('/notification/:id', function(req, res){
     log("call db.connect passing conn object to callback");
     
     conn.collection('doc', function(err, collection) {
-      var result = collection.find().toArray(function(err, items) {
+      var result = []; 
+      
+      collection.find({id: req.params.id}).toArray(function(err, items) {
         log("find from doc return " + err, items);
+	if( items.length > 0)
+	  res.json(items.shift());
       });
   
-      if( typeof result !== "undefined" && result.length > 0 ) 
-        res.json(result.shift());
-
     });
 
   });

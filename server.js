@@ -20,18 +20,36 @@ var db = require('db');
 app.get('/notification/:id', function(req, res){
 
   db.connect(function(conn){
-    log("call db.connect passing conn object", null)});
+    log("call db.connect passing conn object to callback");
+    
+    conn.collection('doc', function(err, collection) {
+      var result = collection.find().toArray(function(err, items) {});
 
-  res.json({"id" :  req.params.id ,"status": 0, "message": "get notification" });
+      if( result.length > 0 ) 
+        res.json(result.shift());
+
+    });
+
+  });
+
+  res.json({"id": req.params.id, "status": "notfound"});
 });
 
 app.post('/notification', function(req, res) {
 
-    log("got req.params", req.params);
-    log("got req.query", req.query);
-    log("got req.body", req.body);
+  log("got req.params", req.params);
+  log("got req.query", req.query);
+  log("got req.body", req.body);
 
-    res.json({"id": 777, "status": 0, "message": "create new notification" });
+  var sample = {"id": 7, "message": "sample notification" };
+
+  db.connect(function(conn){
+    conn.collection('doc', function(err, collection) {
+      collection.insert(sample);
+    });
+  });
+
+  res.json(sample);
 });
 
 app.listen(port,ipaddr);

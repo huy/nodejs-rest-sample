@@ -25,6 +25,8 @@ app.get('/notification/:id', function(req, res){
     conn.collection('doc', function(err, collection) {
       var result = collection.find().toArray(function(err, items) {});
 
+      log("call find on collection doc",result);
+
       if( typeof result !== "undefined" && result.length > 0 ) 
         res.json(result.shift());
 

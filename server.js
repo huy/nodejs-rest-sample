@@ -48,17 +48,14 @@ app.post('/notification', function(req, res) {
   log("got req.query", req.query);
   log("got req.body", req.body);
 
-  var sample = {"id": 7, "message": "sample notification" };
-
   db.connect(function(conn){
     conn.collection('doc', function(err, collection) {
-      collection.insert(sample, {safe:true}, function(err,result) {
+      collection.insert(req.body, {safe:true}, function(err,result) {
         log("insert to doc returns " + err, result);
+	res.json(result.shift);
       });
     });
   });
-
-  res.json(sample);
 });
 
 app.listen(port,ipaddr);

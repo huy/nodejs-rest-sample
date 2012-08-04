@@ -34,13 +34,12 @@ app.get('/notification/:id', function(req, res){
         log("find from doc return " + err, items);
 	if( items.length > 0)
 	  res.json(items.shift());
+        else
+          res.json({"id": req.params.id, "status": "notfound"});
       });
-  
     });
-
   });
 
-  res.json({"id": req.params.id, "status": "notfound"});
 });
 
 app.post('/notification', function(req, res) {

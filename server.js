@@ -26,10 +26,10 @@ app.get('/notification/:id', function(req, res){
     log("call db.connect passing conn object to callback");
     
     conn.collection('doc', function(err, collection) {
-      var result = collection.find().toArray(function(err, items) {});
-
-      log("call find on collection doc", result);
-
+      var result = collection.find().toArray(function(err, items) {
+        log("find from doc return " + err, items);
+      });
+  
       if( typeof result !== "undefined" && result.length > 0 ) 
         res.json(result.shift());
 
@@ -51,7 +51,7 @@ app.post('/notification', function(req, res) {
   db.connect(function(conn){
     conn.collection('doc', function(err, collection) {
       collection.insert(sample, {safe:true}, function(err,result) {
-        log("insert doc to returns " + err, result);
+        log("insert to doc returns " + err, result);
       });
     });
   });

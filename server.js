@@ -30,12 +30,13 @@ app.get('/notification/:id', function(req, res){
       
       log("call collection find with id " + req.params.id);
 
-      collection.find({"id": parseInt(req.params.id) }).toArray(function(err, items) {
+      var id = parseInt(req.params.id);
+      collection.find({"id": id }).toArray(function(err, items) {
         log("find from doc return " + err, items);
 	if( items.length > 0)
 	  res.json(items.shift());
         else
-          res.json({"id": req.params.id, "status": "notfound"});
+          res.json({"id": id, "status": "notfound"});
       });
     });
   });
@@ -58,7 +59,11 @@ app.post('/notification', function(req, res) {
   });
 });
 
+app.put('/notification/:id', function(req, res){
+
+});
+
 app.listen(port,ipaddr);
 
-console.log("Server running at http://" + ipaddr + ":" + port + "/");
+log("Server running at http://" + ipaddr + ":" + port + "/");
 

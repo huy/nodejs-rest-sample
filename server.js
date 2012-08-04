@@ -28,7 +28,9 @@ app.get('/notification/:id', function(req, res){
     conn.collection('doc', function(err, collection) {
       var result = []; 
       
-      collection.find({id: req.params.id}).toArray(function(err, items) {
+      log("call collection find with id " + req.params.id);
+
+      collection.find({"id": 7}).toArray(function(err, items) {
         log("find from doc return " + err, items);
 	if( items.length > 0)
 	  res.json(items.shift());

@@ -33,10 +33,17 @@ app.get('/notification/:id', function(req, res){
       var id = parseInt(req.params.id);
       collection.find({"id": id }).toArray(function(err, items) {
         log("find from doc return " + err, items);
-	if( items.length > 0)
-	  res.json(items.shift());
-        else
-          res.json({"id": id, "status": "notfound"});
+	
+	conn.close();
+
+	if(err)
+	   res.json({"status": err});
+        else {	
+          if(items && items.length > 0)
+	    res.json(items.shift());
+          else
+            res.json({"status": "notfound"});
+        }
       });
     });
   });
@@ -52,8 +59,14 @@ app.post('/notification', function(req, res) {
   db.connect(function(conn){
     conn.collection('doc', function(err, collection) {
       collection.insert(req.body, {safe:true}, function(err,result) {
-        log("insert to doc returns " + err, result);
-	res.json(result.shift());
+        
+	log("insert to doc returns " + err, result);
+	conn.close();
+
+	if(!err)
+	  res.json(result.shift());
+        else
+	  res.json({"status": err});
       });
     });
   });

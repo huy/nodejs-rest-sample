@@ -6,6 +6,9 @@
 *.pid
 *.gz
 .project
+*~
+*.swp
+*.swo
 lib-cov
 pids
 logs

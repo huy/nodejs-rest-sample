@@ -60,7 +60,7 @@ app.get('/notification/:id', function(req, res){
       
       log("call collection find with id " + req.params.id);
 
-      collection.findOne({"_id": req.params.id }).toArray(function(err, doc) {
+      collection.findOne({"_id": req.params.id }, function(err, doc) {
         log("find from doc return", doc);
 	
 	conn.close();

@@ -12,7 +12,7 @@ app.use(express.bodyParser());
 
 // convenient debug function
 function log(message, obj) {
-  if( typeof obj !== "undefined" )	
+  if( typeof obj !== 'undefined' )	
     console.log(message +  ": " + JSON.stringify(obj, null, '\t'));
   else
     console.log(message);
@@ -20,19 +20,23 @@ function log(message, obj) {
 
 var db = require('db');
 
-app.get('/notification/:id', function(req, res){
-
+app.get('/notification', function(req,res) {
   db.connect(function(conn){
-    log("call db.connect passing conn object to callback");
-    
     conn.collection('doc', function(err, collection) {
-      var result = []; 
+      log("got req.query", req.query);
       
-      log("call collection find with id " + req.params.id);
+      var acceptedFields = ['name','desc','a','b'];
 
-      var id = parseInt(req.params.id);
-      collection.find({"id": id }).toArray(function(err, items) {
-        log("find from doc return " + err, items);
+      var filter = {};
+      for (var i = 0; i < acceptedFields.length; i++) {
+        if(typeof req.query[acceptedFields[i]] !== 'undefined')
+          filter[acceptedFields[i]] = req.query[acceptedFields[i]];
+      }
+ 
+      log("set filter to", filter);
+ 
+      collection.find(filter).toArray(function(err, items) {
+        log("find from doc return", items);
 	
 	conn.close();
 
@@ -40,7 +44,33 @@ app.get('/notification/:id', function(req, res){
 	   res.json({"status": err});
         else {	
           if(items && items.length > 0)
-	    res.json(items.shift());
+	    res.json({"status": "found", "result": items});
+          else
+            res.json({"status": "notfound"});
+        }
+      });      
+    });
+  });
+});
+
+app.get('/notification/:id', function(req, res){
+
+  db.connect(function(conn){
+    conn.collection('doc', function(err, collection) {
+      
+      log("call collection find with id " + req.params.id);
+
+      var id = parseInt(req.params.id);
+      collection.find({"id": id }).toArray(function(err, items) {
+        log("find from doc return", items);
+	
+	conn.close();
+
+	if(err)
+	   res.json({"status": err});
+        else {	
+          if(items && items.length > 0)
+	    res.json({"status": "found", "result": items.shift()});
           else
             res.json({"status": "notfound"});
         }
@@ -60,11 +90,11 @@ app.post('/notification', function(req, res) {
     conn.collection('doc', function(err, collection) {
       collection.insert(req.body, {safe:true}, function(err,result) {
         
-	log("insert to doc returns " + err, result);
+	log("insert to doc returns", result);
 	conn.close();
 
 	if(!err)
-	  res.json(result.shift());
+	  res.json({ "status": "success", "result" : result });
         else
 	  res.json({"status": err});
       });

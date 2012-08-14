@@ -60,17 +60,16 @@ app.get('/notification/:id', function(req, res){
       
       log("call collection find with id " + req.params.id);
 
-      var id = parseInt(req.params.id);
-      collection.find({"id": id }).toArray(function(err, items) {
-        log("find from doc return", items);
+      collection.findOne({"_id": req.params.id }).toArray(function(err, doc) {
+        log("find from doc return", doc);
 	
 	conn.close();
 
 	if(err)
 	   res.json({"status": err});
         else {	
-          if(items && items.length > 0)
-	    res.json({"status": "found", "result": items.shift()});
+          if(doc)
+	    res.json({"status": "found", "result": doc});
           else
             res.json({"status": "notfound"});
         }

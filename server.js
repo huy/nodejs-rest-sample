@@ -81,8 +81,6 @@ app.get('/notification/:id', function(req, res){
 
 app.post('/notification', function(req, res) {
 
-  log("got req.params", req.params);
-  log("got req.query", req.query);
   log("got req.body", req.body);
 
   db.connect(function(conn){
@@ -102,7 +100,29 @@ app.post('/notification', function(req, res) {
 });
 
 app.put('/notification/:id', function(req, res){
-
+  log("got req.body", req.body);
+  log("got req.params", req.params);
+  
+  collection.findOne({"_id": db.ObjectID(req.params.id) }, function(err, doc) {
+    log("find from doc return", doc);
+    
+    if(err)
+      res.json({"status": err});
+    else {
+      if(doc) {
+	for (var attrname in req.body) {
+          doc[attrname] = req.body[attrname];
+	}
+        collection.save(doc, {safe:true},function(err,result){
+	  if(err)
+            res.json({"status": err});
+	  else
+            res.json({"status": "success", "result": result});
+	});
+      }
+    };
+    conn.close();
+  });
 });
 
 app.listen(port,ipaddr);

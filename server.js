@@ -60,7 +60,7 @@ app.get('/notification/:id', function(req, res){
       
       log("call collection find with id " + req.params.id);
 
-      collection.findOne({"_id": ObjectId(req.params.id) }, function(err, doc) {
+      collection.findOne({"_id": mongodb.ObjectId(req.params.id) }, function(err, doc) {
         log("find from doc return", doc);
 	
 	conn.close();

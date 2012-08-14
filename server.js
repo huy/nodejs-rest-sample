@@ -103,25 +103,27 @@ app.put('/notification/:id', function(req, res){
   log("got req.body", req.body);
   log("got req.params", req.params);
   
-  collection.findOne({"_id": db.ObjectID(req.params.id) }, function(err, doc) {
-    log("find from doc return", doc);
-    
-    if(err)
-      res.json({"status": err});
-    else {
-      if(doc) {
-	for (var attrname in req.body) {
-          doc[attrname] = req.body[attrname];
-	}
-        collection.save(doc, {safe:true},function(err,result){
-	  if(err)
-            res.json({"status": err});
-	  else
-            res.json({"status": "success", "result": result});
-	});
-      }
-    };
-    conn.close();
+  db.connect(function(conn){
+    conn.collection.findOne({"_id": db.ObjectID(req.params.id) }, function(err, doc) {
+      log("find from doc return", doc);
+      
+      if(err)
+        res.json({"status": err});
+      else {
+        if(doc) {
+          for (var attrname in req.body) {
+            doc[attrname] = req.body[attrname];
+          }
+          collection.save(doc, {safe:true},function(err,result){
+            if(err)
+              res.json({"status": err});
+            else
+              res.json({"status": "success", "result": result});
+          });
+        }
+      };
+      conn.close();
+    });
   });
 });
 

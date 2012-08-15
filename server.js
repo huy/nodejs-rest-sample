@@ -101,7 +101,7 @@ app.post('/notification', function(req, res) {
 
 app.put('/notification/:id', function(req, res){
   log("got req.body", req.body);
-  log("got req.params", req.params);
+  log("got req.params.id", req.params.id);
   
   db.connect(function(conn){
     conn.collection('doc',function(err, collection) {

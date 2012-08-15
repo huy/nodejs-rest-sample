@@ -106,7 +106,7 @@ app.put('/notification/:id', function(req, res){
   db.connect(function(conn){
     conn.collection('doc',function(err, collection) {
       collection.findOne({"_id": db.ObjectID(req.params.id)}, function(err, doc) {
-        log("find from doc return", doc);
+        log("findOne from doc return", doc);
         
         if(err)
           res.json({"status": err});
@@ -115,7 +115,13 @@ app.put('/notification/:id', function(req, res){
             for (var attrname in req.body) {
               doc[attrname] = req.body[attrname];
             }
+	    
+	    log("after update doc from req.body",doc);
+
             collection.save(doc, {safe:true},function(err,result){
+
+	      log("collection.save return", result);
+
               if(err)
                 res.json({"status": err});
               else

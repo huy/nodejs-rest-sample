@@ -118,8 +118,9 @@ app.put('/notification/:id', function(req, res){
 	    
 	    log("after update doc from req.body",doc);
 
-            collection.save(doc, {safe:true},function(err,result){
+            collection.save(doc, function(err,result){
 
+	      log("collection.save return err", err);
 	      log("collection.save return", result);
 
               if(err)

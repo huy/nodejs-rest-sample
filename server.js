@@ -127,12 +127,14 @@ app.put('/notification/:id', function(req, res){
                 res.json({"status": err});
               else
                 res.json({"status": "success", "result": result});
+
+              conn.close();
             });
           } else {	  
 	    res.json({"status": "notfound"});
+            conn.close();
 	  }
         };
-        conn.close();
       });
     });
   });

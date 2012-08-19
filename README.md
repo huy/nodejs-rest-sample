@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 Node.js on OpenShift
 ====================
 
@@ -33,4 +32,3 @@ nodejs-rest-sample
 ==================
 
 sample nodejs restful server
->>>>>>> 3d557c57ae9db215cd5a8b232bc4dc30cd1dfcd2

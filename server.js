@@ -20,7 +20,7 @@ function log(message, obj) {
 
 var db = require('db');
 
-app.get('/notification', function(req,res) {
+app.get('/notification', function (req, res) {
   db.connect(function(conn){
     conn.collection('doc', function (err, collection) {
       log("got req.query", req.query);
@@ -60,7 +60,7 @@ function findOneNotification(id, callback) {
       log("call collection find with id " + id);
 
       collection.findOne({"_id": db.ObjectID(id) }, function (err, doc) {
-        callback(conn, err, doc);
+        callback(conn, collection, err, doc);
       });
 
     });
@@ -68,7 +68,7 @@ function findOneNotification(id, callback) {
 } 
 
 app.get('/notification/:id', function(req, res){
-  findOneNotification(req.params.id, function (conn, err, doc){
+  findOneNotification(req.params.id, function (conn, collection, err, doc){
     conn.close();
     if(err)
       res.json({status: err});
@@ -105,7 +105,7 @@ app.put('/notification/:id', function(req, res){
   log("got req.body", req.body);
   log("got req.params.id", req.params.id);
   
-  findOneNotification(req.params.id, function(conn, err, doc){
+  findOneNotification(req.params.id, function(conn, collection, err, doc){
     log("findOne from doc return", doc);
     
     if(err)

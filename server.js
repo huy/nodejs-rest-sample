@@ -142,6 +142,7 @@ app.delete('/notification/:id', function(req, res){
   db.connect(function(conn){
     conn.collection('doc', function(err, collection) {
       
+      var id = req.params.id;
       log("call collection find with id " + id);
 
       collection.findAndRemove({"_id": db.ObjectID(id) }, function (err, doc) {

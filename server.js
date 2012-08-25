@@ -41,12 +41,12 @@ app.get('/notification', function(req,res) {
 	conn.close();
 
 	if(err)
-	   res.json({"status": err});
+	   res.json({status: err});
         else {	
           if(items && items.length > 0)
-	    res.json({"status": "found", "result": items});
+	    res.json({status: "found", result: items});
           else
-            res.json({"status": "notfound"});
+            res.json({status: "notfound"});
         }
       });      
     });
@@ -66,12 +66,12 @@ app.get('/notification/:id', function(req, res){
 	conn.close();
 
 	if(err)
-	   res.json({"status": err});
+	   res.json({status: err});
         else {	
           if(doc)
-	    res.json({"status": "found", "result": doc});
+	    res.json({status: "found", result: doc});
           else
-            res.json({"status": "notfound"});
+            res.json({status: "notfound"});
         }
       });
     });
@@ -91,9 +91,9 @@ app.post('/notification', function(req, res) {
 	conn.close();
 
 	if(!err)
-	  res.json({ "status": "success", "result" : result });
+	  res.json({ status: "success", result : result });
         else
-	  res.json({"status": err});
+	  res.json({status: err});
       });
     });
   });
@@ -109,7 +109,7 @@ app.put('/notification/:id', function(req, res){
         log("findOne from doc return", doc);
         
         if(err)
-          res.json({"status": err});
+          res.json({status: err});
         else {
           if(doc) {
             for (var attrname in req.body) {
@@ -124,14 +124,14 @@ app.put('/notification/:id', function(req, res){
 	      log("collection.save return", result);
 
               if(err)
-                res.json({"status": err});
+                res.json({status: err});
               else
-                res.json({"status": "success", "result": result});
+                res.json({status: "success", result: result});
 
               conn.close();
             });
           } else {	  
-	    res.json({"status": "notfound"});
+	    res.json({status: "notfound"});
             conn.close();
 	  }
         };
@@ -142,6 +142,7 @@ app.put('/notification/:id', function(req, res){
 
 app.delete('/notification/:id', function(req, res){
   log("got req.params.id", req.params.id);
+  re.json({status: "ok" })
 });
 
 app.listen(port,ipaddr);

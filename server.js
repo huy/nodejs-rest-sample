@@ -142,7 +142,7 @@ app.put('/notification/:id', function(req, res){
 
 app.delete('/notification/:id', function(req, res){
   log("got req.params.id", req.params.id);
-  re.json({status: "ok" })
+  res.json({status: "ok" })
 });
 
 app.listen(port,ipaddr);

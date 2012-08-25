@@ -22,7 +22,7 @@ var db = require('db');
 
 app.get('/notification', function(req,res) {
   db.connect(function(conn){
-    conn.collection('doc', function(err, collection) {
+    conn.collection('doc', function (err, collection) {
       log("got req.query", req.query);
       
       var acceptedFields = ['name','desc','a','b'];
@@ -53,30 +53,32 @@ app.get('/notification', function(req,res) {
   });
 });
 
-app.get('/notification/:id', function(req, res){
-
+function findOneNotification(id, callback) {
   db.connect(function(conn){
     conn.collection('doc', function(err, collection) {
       
-      log("call collection find with id " + req.params.id);
+      log("call collection find with id " + id);
 
-      collection.findOne({"_id": db.ObjectID(req.params.id) }, function(err, doc) {
-        log("find from doc return", doc);
-	
-	conn.close();
-
-	if(err)
-	   res.json({status: err});
-        else {	
-          if(doc)
-	    res.json({status: "found", result: doc});
-          else
-            res.json({status: "notfound"});
-        }
+      collection.findOne({"_id": db.ObjectID(id) }, function (err, doc) {
+        callback(conn, err, doc);
       });
+
     });
   });
+} 
 
+app.get('/notification/:id', function(req, res){
+  findOneNotification(req.params.id, function (conn, err, doc){
+    conn.close();
+    if(err)
+      res.json({status: err});
+    else {	
+      if(doc)
+        res.json({status: "found", result: doc});
+      else
+        res.json({status: "notfound"});
+    }
+  });
 });
 
 app.post('/notification', function(req, res) {
@@ -103,46 +105,58 @@ app.put('/notification/:id', function(req, res){
   log("got req.body", req.body);
   log("got req.params.id", req.params.id);
   
-  db.connect(function(conn){
-    conn.collection('doc', function (err, collection) {
-      collection.findOne({"_id": db.ObjectID(req.params.id)}, function (err, doc) {
-        log("findOne from doc return", doc);
-        
-        if(err)
-          res.json({status: err});
-        else {
-          if(doc) {
-            for (var attrname in req.body) {
-              doc[attrname] = req.body[attrname];
-            }
-	    
-	    log("after update doc from req.body",doc);
+  findOneNotification(req.params.id, function(conn, err, doc){
+    log("findOne from doc return", doc);
+    
+    if(err)
+      res.json({status: err});
+    else {
+      if(doc) {
+        for (var attrname in req.body) {
+          doc[attrname] = req.body[attrname];
+        }
+        log("after update doc from req.body",doc);
 
-            collection.save(doc, {safe: true}, function (err,result){
+        collection.save(doc, {safe: true}, function (err,result){
 
-	      log("collection.save return err", err);
-	      log("collection.save return", result);
+          log("collection.save return err", err);
+          log("collection.save return", result);
 
-              if(err)
-                res.json({status: err});
-              else
-                res.json({status: "success", result: result});
-
-              conn.close();
-            });
-          } else {	  
-	    res.json({status: "notfound"});
-            conn.close();
-	  }
-        };
-      });
-    });
+          if(err)
+            res.json({status: err});
+          else
+            res.json({status: "success", result: result});
+          conn.close();
+        });
+      } else {	  
+        res.json({status: "notfound"});
+        conn.close();
+      }
+    };
   });
 });
 
 app.delete('/notification/:id', function(req, res){
   log("got req.params.id", req.params.id);
-  res.json({status: "ok" })
+  
+  db.connect(function(conn){
+    conn.collection('doc', function(err, collection) {
+      
+      log("call collection find with id " + id);
+
+      collection.findAndRemove({"_id": db.ObjectID(id) }, function (err, doc) {
+        if(err)
+          res.json({status: err});
+        else {	
+          if(doc){
+            res.json({status: "ok" })
+          }
+          else
+            res.json({status: "notfound"});
+        }
+      });
+    });
+  });
 });
 
 app.listen(port,ipaddr);

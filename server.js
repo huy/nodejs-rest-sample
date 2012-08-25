@@ -140,6 +140,10 @@ app.put('/notification/:id', function(req, res){
   });
 });
 
+app.delete('/notification/:id', function(req, res){
+  log("got req.params.id", req.params.id);
+});
+
 app.listen(port,ipaddr);
 
 log("Server running at http://" + ipaddr + ":" + port + "/");

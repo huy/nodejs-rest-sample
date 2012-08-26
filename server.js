@@ -33,7 +33,7 @@ function findOneNotification(object_id, callback) {
   db.connect(function(conn){
     conn.collection('doc', function(err, collection) {
       
-      log("call collection find with id " + id);
+      log("call collection find with id " + object_id);
 
       collection.findOne({"_id": object_id}, function (err, doc) {
         callback(conn, collection, err, doc);
@@ -164,9 +164,6 @@ app.delete('/notification/:id', function(req, res){
     db.connect(function(conn){
       conn.collection('doc', function(err, collection) {
         
-        var id = req.params.id;
-        log("call collection find with id " + id);
-
         collection.findAndRemove({"_id": object_id}, function (err, doc) {
           if(err)
             res.json({status: err});

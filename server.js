@@ -79,7 +79,7 @@ app.get('/notification', function (req, res) {
 app.get('/notification/:id', function(req, res){
   var object_id = parseObjectId(req.params.id);
 
-  if( object_id )
+  if(object_id)
     findOneNotification(object_id, function (conn, collection, err, doc){
       conn.close();
       if(err)
@@ -92,7 +92,7 @@ app.get('/notification/:id', function(req, res){
       }
     });
   else
-    res.json({status: "wrong format of input id"})
+    res.json({status: "wrong format of input id"});
 });
 
 app.post('/notification', function(req, res) {
@@ -121,7 +121,7 @@ app.put('/notification/:id', function(req, res){
 
   var object_id = parseObjectId(req.params.id);
   
-  if( object_id )  
+  if(object_id)  
     findOneNotification(object_id, function(conn, collection, err, doc){
       log("findOne from doc return", doc);
       

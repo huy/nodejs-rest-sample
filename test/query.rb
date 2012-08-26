@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-filter=ARGV.select{|a| a =~ /^--\S+=\S+$/}.map{|a| a[2..-1]}.join('&')
+filter=ARGV.select{|a| a =~ /^--\S+=.+/}.map{|a| a[2..-1].sub(/=(.+)/,"='\\1'") }.join('&')
 
 verbose =  ARGV.find {|a| a == '--verbose' or a == '-v' }
 

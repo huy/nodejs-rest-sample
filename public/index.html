@@ -19,7 +19,7 @@
 
     var container = document.getElementById("jsoneditor");
     var editor = new JSONEditor(container);
-    var url = 'notification/' + $('#id').value;
+    var url = 'notification/' + $('#id').val();
 
     function retrieveJSON () {
         $.ajax({
@@ -29,6 +29,8 @@
           success: function(data) {
             if(data.status === 'found')
               editor.set(data.result);
+            else
+              alert(data.status);
           }
         });
     }

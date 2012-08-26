@@ -9,8 +9,7 @@ var express = require('express');
 var app = express.createServer();
 
 app.use(express.bodyParser());
-app.use(express.static(__dirname));
-app.use('/jsoneditor', express.static(__dirname + '/jsoneditor'));
+app.use(express.static(__dirname  + '/public'));
 
 // convenient debug function
 function log(message, obj) {

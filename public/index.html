@@ -20,9 +20,8 @@
 
     function retrieveJSON () {
         $.get('notification/5039dfd17c47df663b000002', function(data) {
-          var json = $.parseJSON(data);
-          if(json.status === 'found')
-            editor.set(json.result);
+          if(data.status === 'found')
+            editor.set(data.result);
         });
     }
 

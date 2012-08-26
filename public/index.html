@@ -9,6 +9,7 @@
 <p>
     <button onclick="retrieveJSON();">retrieve</button>
     <button onclick="updateJSON();">update</button>
+    <input type="text" id="id" value="503a47e87e49f16537000001"/>
 </p>
 <div id="jsoneditor" style="width: 500px; height: 400px;"></div>
 
@@ -18,7 +19,7 @@
 
     var container = document.getElementById("jsoneditor");
     var editor = new JSONEditor(container);
-    var url = 'notification/503a47e87e49f16537000001';
+    var url = 'notification/' + $.('#id').value;
 
     function retrieveJSON () {
         $.ajax({

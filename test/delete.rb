@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
-require File.dirname(__FILE__) + '/retrieve'
+ARGV.unshift('--method=DELETE')
+
+require File.dirname(__FILE__) + '/get_delete'

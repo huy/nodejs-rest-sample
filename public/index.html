@@ -18,19 +18,31 @@
 
     var container = document.getElementById("jsoneditor");
     var editor = new JSONEditor(container);
-    var uri = 'notification/5039dfd17c47df663b000002';
+    var url = 'notification/5039dfd17c47df663b000002';
 
     function retrieveJSON () {
-        $.get(uri, function(data) {
-          if(data.status === 'found')
-            editor.set(data.result);
+        $.ajax({
+          url: url,
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            if(data.status === 'found')
+              editor.set(data.result);
+          }
         });
     }
 
     function updateJSON() {
         var data = editor.get();
-        $.post(uri, data, function(data) {
-          alert(data.status)
+        $.ajax({
+          url: url,
+          type: 'PUT',
+          contentType: 'application/json',
+          dataType: 'json',
+          data: data,
+          success: function(data) {
+            alert(data.status)
+          }
         });
     }
 </script>

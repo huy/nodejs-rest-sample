@@ -131,9 +131,10 @@ app.put('/notification/:id', function(req, res){
       else {
         if(doc) {
           for (var attrname in req.body) {
-            doc[attrname] = req.body[attrname];
+            if(attrname !== '_id')
+              doc[attrname] = req.body[attrname];
           }
-          log("after update doc from req.body",doc);
+          log("after update doc from req.body", doc);
 
           collection.save(doc, {safe: true}, function (err,result){
 

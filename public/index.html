@@ -12,7 +12,7 @@
     <input type="text" id="id" size="24" value="503a47e87e49f16537000001"/>
 </p>
 <div id="jsoneditor" style="width: 500px; height: 400px;"></div>
-<div style="width: 500px; height: 30px;"><p id="status"></p></div>
+<div style="width: 500px; height: 30px; margin-left:auto; margin-right:auto;"><p id="status"></p></div>
 
 <script type="text/javascript" >
     // create the editor. Optionally, parameters json and options can be
@@ -30,8 +30,7 @@
           success: function(data) {
             if(data.status === 'found')
               editor.set(data.result);
-            else
-              $('#status').val(data.status);
+            $('#status').text("retrieve: " + data.status);
           }
         });
     }
@@ -44,8 +43,8 @@
           contentType: 'application/json',
           dataType: 'json',
           data: JSON.stringify(data),
-          success: function(data) {
-            $('#status').val(data.status);
+          complete: function(data) {
+            $('#status').text("update: " + data.status);
           }
         });
     }

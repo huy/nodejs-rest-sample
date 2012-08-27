@@ -9,9 +9,10 @@
 <p>
     <button onclick="retrieveJSON();">retrieve</button>
     <button onclick="updateJSON();">update</button>
-    <input type="text" id="id" value="503a47e87e49f16537000001"/>
+    <input type="text" id="id" size="24" value="503a47e87e49f16537000001"/>
 </p>
 <div id="jsoneditor" style="width: 500px; height: 400px;"></div>
+<div style="width: 500px; height: 30px;"><p id="status"></p></div>
 
 <script type="text/javascript" >
     // create the editor. Optionally, parameters json and options can be
@@ -30,7 +31,7 @@
             if(data.status === 'found')
               editor.set(data.result);
             else
-              alert(data.status);
+              $('#status').val(data.status);
           }
         });
     }
@@ -44,7 +45,7 @@
           dataType: 'json',
           data: JSON.stringify(data),
           success: function(data) {
-            alert(data.status)
+            $('#status').val(data.status);
           }
         });
     }

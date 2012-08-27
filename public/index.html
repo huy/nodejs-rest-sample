@@ -42,7 +42,7 @@
           contentType: 'application/json',
           dataType: 'json',
           data: JSON.stringify(data),
-          complete: function(data) {
+          success: function(data) {
             $('#status').text("update: " + data.status);
           }
         });

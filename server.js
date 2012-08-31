@@ -45,7 +45,7 @@ app.get('/notification', function (req, res) {
       var acceptedFields = {'name': identity,
         'desc' : identity,
         'a' : parseInt,
-        'b' : parseInt};
+        'b' : identity};
 
       var filter = {};
       for (var p in  acceptedFields) {

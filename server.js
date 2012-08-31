@@ -43,7 +43,7 @@ app.get('/notification', function (req, res) {
       function identity(x){return x};
 
       var acceptedFields = {'name': identity,
-        'desc' : identity
+        'desc' : identity,
         'a' : parseInt,
         'b' : parseInt};
 

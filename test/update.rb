@@ -14,6 +14,6 @@ end
 $stderr.puts("--id=#{id}") if verbose
 $stderr.puts("--data=#{data}") if verbose
 
-cmd= "curl -X PUT -H 'Content-Type: application/json' -d @#{data} http://nodejs-lawoffice.rhcloud.com/notification/#{id} | jsonpp"
+cmd= "curl -X PUT -H 'Content-Type: application/json' -d @#{data} 'http://nodejs-lawoffice.rhcloud.com/notification/#{id}' | jsonpp"
 
 system(cmd)

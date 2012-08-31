@@ -17,7 +17,7 @@ $stderr.puts "--method=#{method}" if verbose
 $stderr.puts "--id=#{all_ids.inspect}" if verbose
 
 all_ids.each do |id|
-  cmd = "curl -X #{method} http://nodejs-lawoffice.rhcloud.com/notification/#{id} | jsonpp"
+  cmd = "curl -X #{method} 'http://nodejs-lawoffice.rhcloud.com/notification/#{id}' | jsonpp"
 
   $stderr.puts "--cmd=#{cmd}" if verbose
 

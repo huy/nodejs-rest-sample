@@ -21,15 +21,6 @@ function log(message, obj) {
 
 var db = require('db');
 
-function parseObjectId(id) {
-  try{
-    return db.ObjectID(id);
-  }
-  catch(err){
-    return null;
-  }
-}
-
 function findOneNotification(object_id, callback) {
   db.connect(function(conn){
     conn.collection('doc', function(err, collection) {
@@ -49,12 +40,19 @@ app.get('/notification', function (req, res) {
     conn.collection('doc', function (err, collection) {
       log("got req.query", req.query);
       
-      var acceptedFields = ['name','desc','a','b'];
+      function identity(x){return x};
+
+      var acceptedFields = {'name': identity,
+        'desc' : identity
+        'a' : parseInt,
+        'b' : parseInt};
 
       var filter = {};
-      for (var i = 0; i < acceptedFields.length; i++) {
-        if(typeof req.query[acceptedFields[i]] !== 'undefined')
-          filter[acceptedFields[i]] = req.query[acceptedFields[i]];
+      for (var p in  acceptedFields) {
+        if(acceptedFields.hasOwnProperty(p)){
+          if(typeof req.query[p] !== 'undefined')
+            filter[p] = acceptedFields[p](req.query[p]);
+        }
       }
  
       log("set filter to", filter);
@@ -78,7 +76,7 @@ app.get('/notification', function (req, res) {
 });
 
 app.get('/notification/:id', function(req, res){
-  var object_id = parseObjectId(req.params.id);
+  var object_id = db.parseObjectId(req.params.id);
 
   if(object_id)
     findOneNotification(object_id, function (conn, collection, err, doc){
@@ -120,7 +118,7 @@ app.put('/notification/:id', function(req, res){
   log("got req.body", req.body);
   log("got req.params.id", req.params.id);
 
-  var object_id = parseObjectId(req.params.id);
+  var object_id = db.parseObjectId(req.params.id);
   
   if(object_id)  
     findOneNotification(object_id, function(conn, collection, err, doc){
@@ -160,7 +158,7 @@ app.put('/notification/:id', function(req, res){
 app.delete('/notification/:id', function(req, res){
   log("got req.params.id", req.params.id);
   
-  var object_id = parseObjectId(req.params.id);
+  var object_id = db.parseObjectId(req.params.id);
   
   if( object_id )
     db.connect(function(conn){

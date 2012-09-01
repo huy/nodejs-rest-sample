@@ -1,5 +1,14 @@
 #!/usr/bin/env ruby
 
+require File.expand_path(File.dirname(__FILE__)) + '/conf'
+
+local = ARGV.find {|a| a == '--local' or a == '-l' }
+if local
+  url = URL[:local]
+else
+  url = URL[:openshift]
+end
+
 verbose = ARGV.find {|a| a == '--verbose' or a == '-v' }
 
 data = ARGV.find {|a| a =~ /^--data=\S+$/}.to_s.split('=')[1]
@@ -12,7 +21,7 @@ end
 
 $stderr.puts("--data=#{data}") if verbose
 
-cmd = "curl -X POST -H 'Content-Type: application/json' -d @#{data} http://nodejs-lawoffice.rhcloud.com/notification | jsonpp"
+cmd = "curl -X POST -H 'Content-Type: application/json' -d @#{data} #{url}/notification | jsonpp"
 
 $stderr.puts("--cmd=#{cmd}") if verbose
 

@@ -1,5 +1,14 @@
 #!/usr/bin/env ruby
 
+require File.expand_path(File.dirname(__FILE__)) + '/conf'
+
+local = ARGV.find {|a| a == '--local' or a == '-l' }
+if local
+  url = URL[:local]
+else
+  url = URL[:openshift]
+end
+
 verbose = ARGV.find {|a| a == '--verbose' or a == '-v' }
 method = ARGV.find {|a| a =~ /^--method=\w+/}.to_s.split('=')[1].to_s
 
@@ -17,7 +26,7 @@ $stderr.puts "--method=#{method}" if verbose
 $stderr.puts "--id=#{all_ids.inspect}" if verbose
 
 all_ids.each do |id|
-  cmd = "curl -X #{method} 'http://nodejs-lawoffice.rhcloud.com/notification/#{id}' | jsonpp"
+  cmd = "curl -X #{method} '#{url}/notification/#{id}' | jsonpp"
 
   $stderr.puts "--cmd=#{cmd}" if verbose
 

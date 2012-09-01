@@ -157,7 +157,7 @@ app.delete('/notification/:id', function(req, res){
     db.connect(function(conn){
       conn.collection('doc', function(err, collection) {
         
-        collection.findAndRemove({"_id": object_id}, function (err, doc) {
+        collection.findAndRemove({"_id": object_id}, {safe: true}, function (err, doc) {
           if(err)
             res.json({status: err});
           else {	
@@ -184,8 +184,8 @@ app.delete('/notification', function(req, res) {
   db.connect(function(conn){
     conn.collection('doc', function (err, collection) {
  
-      collection.findAndRemove(filter, function (err, items) {
-        log("findAndRemove from doc return", items);
+      collection.remove(filter, {safe: true}, function (err, items) {
+        log("remove from doc return", items);
 	
 	conn.close();
 
@@ -195,7 +195,7 @@ app.delete('/notification', function(req, res) {
           if(items)
 	    res.json({status: "ok", result: items});
           else
-            res.json({status: "unknown"});
+            res.json({status: "ok", result: 0});
         }
       });      
     });

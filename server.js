@@ -21,27 +21,34 @@ function log(message, obj) {
 
 var db = require('db');
 
+function createFilter(query){
+  function identity(x){return x};
+
+  var acceptedFields = {'name': identity,
+    'desc' : identity,
+    'a' : parseInt,
+    'b' : identity};
+
+  var filter = {};
+
+  for (var p in  acceptedFields) {
+    if(acceptedFields.hasOwnProperty(p)){
+      if(typeof query[p] !== 'undefined')
+        filter[p] = acceptedFields[p](query[p]);
+    }
+  }
+  return filter;
+}
+
 app.get('/notification', function (req, res) {
+  log("got req.query", req.query);
+  
+  var filter = createFilter(req.query);
+
+  log("set query filter to", filter);
+
   db.connect(function(conn){
     conn.collection('doc', function (err, collection) {
-      log("got req.query", req.query);
-      
-      function identity(x){return x};
-
-      var acceptedFields = {'name': identity,
-        'desc' : identity,
-        'a' : parseInt,
-        'b' : identity};
-
-      var filter = {};
-      for (var p in  acceptedFields) {
-        if(acceptedFields.hasOwnProperty(p)){
-          if(typeof req.query[p] !== 'undefined')
-            filter[p] = acceptedFields[p](req.query[p]);
-        }
-      }
- 
-      log("set filter to", filter);
  
       collection.find(filter).toArray(function(err, items) {
         log("find from doc return", items);
@@ -165,6 +172,34 @@ app.delete('/notification/:id', function(req, res){
     });
   else
     res.json({status: "wrong format of input id"});
+});
+
+app.delete('/notification', function(req, res) {
+  log("got req.query", req.query);
+  
+  var filter = createFilter(req.query);
+
+  log("set delete filter to", filter);
+
+  db.connect(function(conn){
+    conn.collection('doc', function (err, collection) {
+ 
+      collection.findAndRemove(filter).toArray(function(err, items) {
+        log("findAndRemove from doc return", items);
+	
+	conn.close();
+
+	if(err)
+	   res.json({status: err});
+        else {	
+          if(items)
+	    res.json({status: "ok", result: items});
+          else
+            res.json({status: "unknown"});
+        }
+      });      
+    });
+  });
 });
 
 app.listen(port,ipaddr);

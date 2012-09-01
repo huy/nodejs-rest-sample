@@ -184,7 +184,7 @@ app.delete('/notification', function(req, res) {
   db.connect(function(conn){
     conn.collection('doc', function (err, collection) {
  
-      collection.findAndRemove(filter).toArray(function(err, items) {
+      collection.findAndRemove(filter, function (err, items) {
         log("findAndRemove from doc return", items);
 	
 	conn.close();

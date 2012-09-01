@@ -6,7 +6,7 @@ method = ARGV.find {|a| a =~ /^--method=\w+/}.to_s.split('=')[1].to_s
 all_ids = ARGV.find {|a| a =~ /^--id=\S+/}.to_s.split('=')[1].to_s.split(',')
 basename= File.basename(__FILE__)
 
-if all_ids.empty?
+if all_ids.empty? or method.empty?
  $stderr.puts("Usage examples:")
  $stderr.puts("\t#{basename} --method=GET --id=501c9c5586601f2d09000001")
  $stderr.puts("\t#{basename} --method=DELETE --id=501c9c5586601f2d09000001,502c5855865d037f1a000002 --verbose")

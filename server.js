@@ -1,11 +1,12 @@
 #!/bin/env node
 'use strict';
 
-//Get the environment variables we need.
+var _ = require('underscore');
+
+// openshift or local
 var ipaddr  = process.env.OPENSHIFT_INTERNAL_IP || "127.0.0.1";
 var port    = process.env.OPENSHIFT_INTERNAL_PORT || 8080;
 
-//  OpenShift sample express application
 var express = require('express');
 var app = express.createServer();
 
@@ -24,22 +25,17 @@ function log(message, obj) {
 var db = require('db');
 
 function createFilter(query) {
-  var filter, acceptedFields, p;
+  var acceptedFields = {'name': _.identity,
+        'desc': _.identity,
+        'a': parseInt,
+        'b': _.identity},
+    filter = {};
 
-  function identity(x) { return x; }
-
-  acceptedFields = {'name': identity,
-    'desc' : identity,
-    'a' : parseInt,
-    'b' : identity};
-
-  filter = {};
-
-  for (p in acceptedFields) {
-    if (acceptedFields.hasOwnProperty(p) && typeof query[p] !== 'undefined') {
-      filter[p] = acceptedFields[p](query[p]);
+  _.each(acceptedFields, function (v, k) {
+    if (typeof query[k] !== 'undefined') {
+      filter[k] = v(query[k]);
     }
-  }
+  });
   return filter;
 }
 
@@ -130,11 +126,11 @@ app.put('/notification/:id', function (req, res) {
         res.json({status: err});
       } else {
         if (doc) {
-          for (attrname in req.body) {
-            if (req.body.hasOwnProperty(attrname) && attrname !== '_id') {
+          _.each(req.body, function (attrname) {
+            if (attrname !== '_id') {
               doc[attrname] = req.body[attrname];
             }
-          }
+          });
           log("after update doc from req.body", doc);
 
           collection.save(doc, {safe: true}, function (err, result) {

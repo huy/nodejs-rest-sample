@@ -1,52 +1,69 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="jsoneditor/jsoneditor.css">
-    <script type="text/javascript" src="jquery/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="jsoneditor/jsoneditor.js"></script>
+  <!-- we will not touch these libraries -->
+  <script src="vendor/jquery-1.6.1.js" type="text/javascript" charset="utf-8"></script>
+  <script src="vendor/jquery.ui.core.js" type="text/javascript" charset="utf-8"></script>
+  <script src="vendor/jquery.ui.widget.js" type="text/javascript" charset="utf-8"></script>
+  <script src="vendor/jquery.ui.position.js" type="text/javascript" charset="utf-8"></script>
+  <script src="vendor/jquery.ui.autocomplete.js" type="text/javascript" charset="utf-8"></script>
+  <script src="vendor/underscore-1.1.5.js" type="text/javascript" charset="utf-8"></script>
+  <script src="vendor/backbone-0.5.0.js" type="text/javascript" charset="utf-8"></script>
+
+  <!-- we will touch this library if required -->
+
+  <link rel="stylesheet" href="visualsearch/lib/css/reset.css" type="text/css" media="screen" charset="utf-8">  
+  <link rel="stylesheet" href="visualsearch/lib/css/icons.css" type="text/css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="visualsearch/lib/css/workspace.css" type="text/css" media="screen" charset="utf-8">
+
+  <script src="visualsearch/lib/js/visualsearch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/views/search_box.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/views/search_facet.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/views/search_input.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/models/search_facets.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/models/search_query.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/utils/backbone_extensions.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/utils/hotkeys.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/utils/jquery_extensions.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/utils/search_parser.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/utils/inflector.js" type="text/javascript" charset="utf-8"></script>
+  <script src="visualsearch/lib/js/templates/templates.js" type="text/javascript" charset="utf-8"></script>
+
+  <!-- we will touch this library if required -->
+  <link rel="stylesheet" type="text/css" href="jsoneditor/jsoneditor.css">
+  <script type="text/javascript" src="jsoneditor/jsoneditor.js"></script>
+
+  <!-- our UI code -->
+  <script type="text/javascript" charset="utf-8" src="initsearch.js"></script>
+  <script type="text/javascript" charset="utf-8" src="initeditor.js"></script>
+
+  <style>
+    .hint {
+      font-size: 13px;
+      margin: 0 0 12px 12px;
+      font-weight: normal;
+    }
+  </style>
+
 </head>
 <body>
-<p>
-    <button onclick="retrieveJSON();">retrieve</button>
-    <button onclick="updateJSON();">update</button>
+
+<h2>Search
+  <span class="hint">
+    <i>Try searching for: <b>name</b>, <b>desc</b>, <b>a</b>, <b>b</b></i>
+  </span>
+</h2>
+
+<div id="search_box_container" style="width: 800px;"></div>
+<div id="search_query" style="width: 800px;" >&nbsp;</div>
+
+<div id="action" style="width: 800px;">
+    <button id="button_edit">edit</button>
+    <button id="button_save">save</button>
     <input type="text" id="id" size="26" value="503a47e87e49f16537000001"/>
-</p>
+</div>
+
 <div id="jsoneditor" style="width: 500px; height: 400px;"></div>
 <div style="width: 500px; height: 30px;"><p id="status"></p></div>
-
-<script type="text/javascript" >
-    // create the editor. Optionally, parameters json and options can be
-    // specified in the constructor.
-
-    var container = document.getElementById("jsoneditor");
-    var editor = new JSONEditor(container);
-
-    function retrieveJSON () {
-        $.ajax({
-          url: 'notification/' + $('#id').val(),
-          type: 'GET',
-          dataType: 'json',
-          success: function(data) {
-            if(data.status === 'found')
-              editor.set(data.result);
-            $('#status').text("retrieve: " + data.status);
-          }
-        });
-    }
-
-    function updateJSON() {
-        var data = editor.get();
-        $.ajax({
-          url: 'notification/' + $('#id').val(),
-          type: 'PUT',
-          contentType: 'application/json',
-          dataType: 'json',
-          data: JSON.stringify(data),
-          success: function(data) {
-            $('#status').text("update: " + data.status);
-          }
-        });
-    }
-</script>
 </body>
 </html>

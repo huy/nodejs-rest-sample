@@ -11,18 +11,23 @@ $(document).ready(function() {
     ],
     callbacks  : {
       search : function(query, searchCollection) {
-        var $query = $('#search_query');
-        $query.stop().animate({opacity : 1}, {duration: 300, queue: false});
-        $query.html('<span class="raquo">&raquo;</span> You searched for: <b>' + searchCollection.serialize() + '</b>');
-        clearTimeout(window.queryHideDelay);
-        window.queryHideDelay = setTimeout(function() {
-          $query.animate({
-            opacity : 0
-          }, {
-            duration: 1000,
-            queue: false
-          });
-        }, 2000);
+        $.ajax({
+          url: 'notification',
+          type: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            var $status = $('#status');
+            var $search_result = $('#search_result');
+            var result;
+            if (data.status === 'found') {
+              result = _.map(data.result, function (doc){
+                return doc._id;
+              }).join('<br/>'); 
+              $search_result.html(result);
+            }
+            $status.html('Search: <b>' + data.status + '</b>');
+          }
+        });
       },
       valueMatches : function(category, searchTerm, callback) {
         switch (category) {

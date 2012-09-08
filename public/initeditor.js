@@ -11,7 +11,7 @@ $(document).ready(function() {
       success: function(data) {
         if(data.status === 'found')
           editor.set(data.result);
-        $('#status').text("retrieve: " + data.status);
+        $('#status').html("Retrieve: <b>" + data.status + "</b>");
       }
     });
   });
@@ -25,7 +25,7 @@ $(document).ready(function() {
       dataType: 'json',
       data: JSON.stringify(data),
       success: function(data) {
-        $('#status').text("update: " + data.status);
+        $('#status').html("Update: <b>" + data.status + "</b>");
       }
     });
   });

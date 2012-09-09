@@ -126,11 +126,9 @@ app.put('/notification/:id', function (req, res) {
         res.json({status: err});
       } else {
         if (doc) {
-          _.each(req.body, function (attrname) {
-            if (attrname !== '_id') {
-              doc[attrname] = req.body[attrname];
-            }
-          });
+          doc = req.body;
+          doc._id = objectId;
+
           log("after update doc from req.body", doc);
 
           collection.save(doc, {safe: true}, function (err, result) {

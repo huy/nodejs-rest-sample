@@ -5,7 +5,7 @@ $(document).ready(function() {
   $("#button_save").click(function () {
     var data = editor.get();
     $.ajax({
-      url: 'notification/' + $('#id').val(),
+      url: 'notification/' + data._id,
       type: 'PUT',
       contentType: 'application/json',
       dataType: 'json',
@@ -28,13 +28,16 @@ $(document).ready(function() {
     ],
     callbacks  : {
       search : function(query, searchCollection) {
+        var filter = searchCollection.map(function (facet) { 
+          return facet.get('category') + '=' + facet.get('value');}).join('&');
+
         $.ajax({
-          url: 'notification',
+          url: 'notification?' + filter,
           type: 'GET',
           dataType: 'json',
           success: function(data) {
             var result;
-            if (data.status === 'found') {
+            if (data.status === 'found' || data.status == 'notfound') {
               result = _.map(data.result, function (doc){
                 return '<a href="/notification/' + doc._id + '" class="link_id">' + doc._id + '</a>';
               }).join('<br/>'); 

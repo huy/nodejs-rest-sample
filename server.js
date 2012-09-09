@@ -101,7 +101,7 @@ app.post('/notification', function (req, res) {
         conn.close();
 
         if (!err) {
-          res.json({status: "success", result : result});
+          res.json({status: 'ok', result : result});
         } else {
           res.json({status: err});
         }

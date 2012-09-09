@@ -34,7 +34,7 @@
   position: relative;
   background: transparent;
   border: 2px solid #ccc;
-  border-radius: 16px; -webkit-border-radius: 16px; -moz-border-radius: 16px;
+/*  border-radius: 16px; -webkit-border-radius: 16px; -moz-border-radius: 16px; */
   background-color: #fafafa;
   -webkit-box-shadow: inset 0px 0px 3px #ccc;
   -moz-box-shadow: inset 0px 0px 3px #ccc;

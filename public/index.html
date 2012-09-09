@@ -36,32 +36,25 @@
   <!-- our UI code -->
   <script type="text/javascript" charset="utf-8" src="init.js"></script>
 
-  <style>
-    .hint {
-      font-size: 13px;
-      margin: 0 0 12px 12px;
-      font-weight: normal;
-    }
-  </style>
-
 </head>
 <body>
 
 <div id="top" style="margin-bottom: 20px">
-  <div id="search_label" style="position: fixed; width: 200px; top: 10px;">
-    <h2 style="margin-top: 10px; margin-bottom: 10px; margin-left: 50px;">Search</h2>
+  <div id="search_label" style="float: left; width: 210px; top: 10px;">
+    <h2 style="margin-top: 0px; margin-bottom: 10px; margin-left: 50px;">Search</h2>
   </div>
-  <div id="search_box_container" style="width: 800px; position: relative; top: 10px; left: 210px;">
+  <div id="search_box_container" style="float: left; width: 800px; top: 10px;">
   </div>
 </div>
-<div id="bottom" style="border-top-style:solid; border-width: 1px; padding-top: 10px;">
-  <div id="search_result" style="position: fixed; width: 200px; margin-top: 20px; margin-left: 5px;">
+<div id="action" style="clear: both; border-top-style:solid; border-bottom-style: solid; border-width: 1px; border-color: lightgray; padding-top: 10px; padding-bottom: 5px;">
+  <button id="button_save" style="position: relative; left: 210px;">save</button>
+</div>
+<div id="bottom" style="padding-top: 10px; border-style: solid; border-width: 0px;">
+  <div id="search_result" style="float: left; width: 210px; margin-left: 5px;">
+  &nbsp;
   </div>
-  <div id="action" style="width: 800px;">
-    <button id="button_save" style="position: relative; left: 210px;">save</button>
-  </div>
-  <div id="content" style="position: relative; left: 210px; width: 1000px;">
-    <div id="jsoneditor" style="width: 800px; height: 400px;"></div>
+  <div id="content" style="float: left; width: 1000px;">
+    <div id="jsoneditor" style="clear: both; width: 800px; height: 400px;"></div>
     <div id="status" style="width: 800px; height: 30px;">&nbsp;</div>
   </div>
 </div>

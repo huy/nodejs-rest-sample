@@ -34,8 +34,7 @@
   <script type="text/javascript" src="jsoneditor/jsoneditor.js"></script>
 
   <!-- our UI code -->
-  <script type="text/javascript" charset="utf-8" src="initsearch.js"></script>
-  <script type="text/javascript" charset="utf-8" src="initeditor.js"></script>
+  <script type="text/javascript" charset="utf-8" src="init.js"></script>
 
   <style>
     .hint {
@@ -48,21 +47,19 @@
 </head>
 <body>
 
-<div id="top" style="margin-bottom: 10px">
+<div id="top" style="margin-bottom: 20px">
   <div id="search_label" style="position: fixed; width: 200px; top: 10px;">
     <h2 style="margin-top: 10px; margin-bottom: 10px; margin-left: 50px;">Search</h2>
   </div>
   <div id="search_box_container" style="width: 800px; position: relative; top: 10px; left: 210px;">
   </div>
 </div>
-<div id="bottom" >
+<div id="bottom" style="border-top-style:solid; border-width: 1px; padding-top: 10px;">
   <div id="search_result" style="position: fixed; width: 200px; margin-top: 10px; margin-left: 5px;">
   </div>
   <div id="content" style="position: relative; left: 210px; width: 1000px;">
     <div id="action" style="width: 800px;">
-        <button id="button_edit">edit</button>
         <button id="button_save">save</button>
-        <input type="text" id="id" size="26" value="503a47e87e49f16537000001"/>
     </div>
     <div id="jsoneditor" style="width: 800px; height: 400px;"></div>
     <div id="status" style="width: 800px; height: 30px;">&nbsp;</div>

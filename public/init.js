@@ -41,7 +41,11 @@ $(document).ready(function() {
               result = _.map(data.result, function (doc){
                 return '<a href="/notification/' + doc._id + '" class="link_id">' + doc._id + '</a>';
               }).join('<br/>'); 
-              $('#search_result').html(result);
+              if (result) {
+                $('#search_result').html(result);
+              } else {
+                $('#search_result').html('&nbsp;');
+              }
             }
             $('#status').html('Search: <b>' + data.status + '</b>');
             $('a.link_id').click(function (event) {

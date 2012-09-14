@@ -46,7 +46,7 @@ $(document).ready(function() {
     initialize: function () {
       this.collection = [];
       this.editor = new JSONEditor($('#jsoneditor').get(0));
-      this.initVisualSearch({editor: this.editor, collection: this.collection});
+      this.initVisualSearch(this);
     },
     saveDoc: function (event) {
       var edited = this.editor.get();
@@ -101,16 +101,14 @@ $(document).ready(function() {
         }
       });
     },
-    initVisualSearch: function (context) {
+    initVisualSearch: function (app) {
       VS.init({
         container  : $('#search_box'),
         query      : '',
         unquotable : [
-          'text',
           'name',
           'desc',
-          'a',
-          'b'
+          'a'
         ],
         callbacks  : {
           search : function(query, searchCollection) {
@@ -124,12 +122,12 @@ $(document).ready(function() {
                 var result;
                 if (data.status === 'found' || data.status === 'notfound') {
                   if (data.result) {
-                    context.collection = data.result;
+                    app.collection = data.result;
                   } else {
-                    context.collection = [];
+                    app.collection = [];
                   }
-                  $('#sidebar').html(new SearchResult(context.editor, context.collection).render().el);
-                  context.editor.set({});
+                  $('#sidebar').html(new SearchResult(app.editor, app.collection).render().el);
+                  app.editor.set({});
                 }   
                 $('#status').html('Search: <b>' + data.status + '</b>');
               }   

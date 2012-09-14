@@ -101,7 +101,7 @@ $(document).ready(function() {
     },
     initVisualSearch: function (context) {
       VS.init({
-        container  : $('#search_box_container'),
+        container  : $('#search_box'),
         query      : '',
         unquotable : [
           'text',

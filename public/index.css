@@ -1,0 +1,82 @@
+div#top {
+  margin-bottom: 20px;
+}
+
+div#search_label {
+  float: left; 
+  width: 210px; 
+  top: 10px;
+}
+
+div#search_label h2 {
+  margin-top: 0px; 
+  margin-bottom: 10px; 
+  margin-left: 60px;
+}
+
+div#search_box {
+  float: left; 
+  width: 800px; 
+  top: 10px;
+}
+
+div#action {
+  clear: both; 
+  border-top-style:solid; 
+  border-bottom-style: solid; 
+  border-width: 1px; 
+  border-color: lightgray; 
+  padding-top: 5px; 
+  padding-bottom: 5px;
+}
+
+button#button_save {
+  position: relative; 
+  left: 210px;
+}
+
+button#button_add {
+  position: relative; 
+  left: 210px;
+}
+
+button#button_delete {
+  position: relative; 
+  left: 210px;
+}
+
+div#bottom {
+  padding-top: 10px; 
+  border-style: solid; 
+  border-width: 0px;
+}
+
+div#search_result {
+  float: left; 
+  width: 210px; 
+  margin-left: 5px;
+}
+
+div#content {
+  float: left; 
+  width: 1000px; 
+  margin-left: 0px;
+}
+
+div#jsoneditor {
+  clear: both; 
+  width: 800px; 
+  height: 400px;
+}
+
+div#status {
+  width: 800px; 
+  margin-top: 5px; 
+  padding-top: 5px; 
+  padding-bottom: 5px; 
+  border-top-style: solid; 
+  border-bottom-style: solid; 
+  border-width: 1px; 
+  border-color: lightgray;
+}
+

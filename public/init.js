@@ -2,19 +2,35 @@ $(document).ready(function() {
   var container = $('#jsoneditor');
   var editor = new JSONEditor(container.get(0));
 
-  function linkIdHandler(event) {
-    $.ajax({
-       url: $(this).attr('href'),
-       type: 'GET',
-       dataType: 'json',
-       success: function(data) {
-         if(data.status === 'found')
-           editor.set(data.result);
-         $('#status').html("Retrieve: <b>" + data.status + "</b>");
-       }
-    });
-    event.preventDefault();
-  };
+  var SearchResult = Backbone.View.extend({
+    el: $('#search_result'),
+    events: {
+      "click a.link_id": "updateEditor"
+    },
+    updateEditor: function (event){
+      event.preventDefault();
+      $.ajax({
+         url: $(event.target).attr('href'),
+         type: 'GET',
+         dataType: 'json',
+         success: function(data) {
+           if(data.status === 'found')
+             editor.set(data.result);
+           $('#status').html("Retrieve: <b>" + data.status + "</b>");
+         }
+      });
+    },
+    render: function () {
+      var result = _.map(this.collection, function (doc){
+        return '<a href="/notification/' + doc._id + '" class="link_id">' + doc._id + '</a>';
+      }).join('<br/>'); 
+      if (result)
+        this.el.html(result);
+      else
+        this.el.html('&nbsp;');
+    }
+  });
+  var searchResult = new SearchResult({collection: []});
 
   $("#button_save").click(function () {
     var edited = editor.get();
@@ -30,15 +46,20 @@ $(document).ready(function() {
     });
   });
   $("#button_delete").click(function () {
-    var edited = editor.get();
+    var deleted = editor.get();
     $.ajax({
-      url: 'notification/' + edited._id,
+      url: 'notification/' + deleted._id,
       type: 'DELETE',
       contentType: 'application/json',
       dataType: 'json',
       success: function(data) {
-        $('a[href="/notification/' + edited._id + '"]').remove();
+        searchResult.collection = _.reject(searchResult.collection, function (doc) {
+          return (doc._id === deleted._id);
+        });
+        searchResult.render();
+
         $('#status').html("Delete: <b>" + data.status + "</b>");
+        editor.set({});
       }
     });
   });
@@ -52,16 +73,17 @@ $(document).ready(function() {
       dataType: 'json',
       data: JSON.stringify(edited),
       success: function(data) {
+        var added;
         if( data.status === 'ok' ){
-          $('#search_result').prepend('<a href="/notification/' + data.result[0]._id + '" class="link_id">' + 
-            data.result[0]._id + '</a>' + '<br>');
+          added = data.result[0];
+          searchResult.collection.unshift(added);
+          searchResult.render();
+          editor.set(added);
         }
-        $('a[href="/notification/' + data.result[0]._id + '"]').click(linkIdHandler);
         $('#status').html("Add: <b>" + data.status + "</b>");
       }
     });
   });
-
 
   window.visualSearch = VS.init({
     container  : $('#search_box_container'),
@@ -85,17 +107,11 @@ $(document).ready(function() {
           success: function(data) {
             var result;
             if (data.status === 'found' || data.status == 'notfound') {
-              result = _.map(data.result, function (doc){
-                return '<a href="/notification/' + doc._id + '" class="link_id">' + doc._id + '</a>';
-              }).join('<br/>'); 
-              if (result) {
-                $('#search_result').html(result + '&nbsp;');
-              } else {
-                $('#search_result').html('&nbsp;');
-              }
+              searchResult.collection = data.result;
+              searchResult.render();
+              editor.set({});
             }
             $('#status').html('Search: <b>' + data.status + '</b>');
-            $('a.link_id').click(linkIdHandler);
           }
         });
       },

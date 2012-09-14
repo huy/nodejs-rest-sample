@@ -1,12 +1,13 @@
 $(document).ready(function() {
   var SearchResult = Backbone.View.extend({
-    el: $('#search_result'),
+    id: "search_result",
+    tagName: "div",
     events: {
       "click a.link_id": "updateEditor"
     },
-    initialize: function (editor) {
+    initialize: function (editor, collection) {
       this.editor = editor;
-      this.collection = [];
+      this.collection = collection;
     },
     updateEditor: function (event){
       event.preventDefault();
@@ -27,9 +28,10 @@ $(document).ready(function() {
         return '<a href="/notification/' + doc._id + '" class="link_id">' + doc._id + '</a>';
       }).join('<br/>'); 
       if (result)
-        this.el.html(result);
+        $(this.el).html(result);
       else
-        this.el.html('&nbsp;');
+        $(this.el).html('&nbsp;');
+      return this;
     }
   });
 
@@ -42,9 +44,9 @@ $(document).ready(function() {
       "click #button_add": "addDoc"
     },
     initialize: function () {
+      this.collection = [];
       this.editor = new JSONEditor($('#jsoneditor').get(0));
-      this.searchResult = new SearchResult(this.editor);
-      this.initVisualSearch({editor: this.editor, searchResult: this.searchResult});
+      this.initVisualSearch({editor: this.editor, collection: this.collection});
     },
     saveDoc: function (event) {
       var edited = this.editor.get();
@@ -67,10 +69,10 @@ $(document).ready(function() {
         dataType: 'json',
         context: this,
         success: function(data) {
-          this.searchResult.collection = _.reject(this.searchResult.collection, function (doc) {
+          this.collection = _.reject(this.collection, function (doc) {
             return (doc._id === deleted._id);
           });
-          this.searchResult.render();
+          $('#sidebar').html(new SearchResult(this.editor, this.collection).render().el);
 
           $('#status').html("Delete: <b>" + data.status + "</b>");
           this.editor.set({});
@@ -91,8 +93,8 @@ $(document).ready(function() {
           var added;
           if( data.status === 'ok' ){
             added = data.result[0];
-            this.searchResult.collection.unshift(added);
-            this.searchResult.render();
+            this.collection.unshift(added);
+            $('#sidebar').html(new SearchResult(this.editor, this.collection).render().el);
             this.editor.set(added);
           }
           $('#status').html("Add: <b>" + data.status + "</b>");
@@ -122,11 +124,11 @@ $(document).ready(function() {
                 var result;
                 if (data.status === 'found' || data.status === 'notfound') {
                   if (data.result) {
-                    context.searchResult.collection = data.result;
+                    context.collection = data.result;
                   } else {
-                    context.searchResult.collection = [];
+                    context.collection = [];
                   }
-                  context.searchResult.render();
+                  $('#sidebar').html(new SearchResult(context.editor, context.collection).render().el);
                   context.editor.set({});
                 }   
                 $('#status').html('Search: <b>' + data.status + '</b>');

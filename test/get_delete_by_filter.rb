@@ -13,6 +13,7 @@ else
 end
 
 verbose = ARGV.find {|a| a == '--verbose' or a == '-v' }
+jp = ARGV.find {|a| a == '--jsonpp' or a == '-jp' }
 
 $stderr.puts "--filter=#{filter}" if verbose
 $stderr.puts "--method=#{method}" if verbose
@@ -28,7 +29,8 @@ end
 $stderr.puts "--method=#{method}" if verbose
 $stderr.puts "--url=#{url}" if verbose
 
-cmd = "curl -X #{method} '#{url}/notification?#{filter}' | jsonpp"
+cmd = "curl -X #{method} '#{url}/notification?#{filter}' "
+cmd << ' | jsonpp' if jp
 
 $stderr.puts "--cmd=#{cmd}" if verbose
 

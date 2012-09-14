@@ -11,6 +11,7 @@ end
 
 verbose = ARGV.find {|a| a == '--verbose' or a == '-v' }
 method = ARGV.find {|a| a =~ /^--method=\w+/}.to_s.split('=')[1].to_s
+jp = ARGV.find {|a| a == '--jsonpp' or a == '-jp' }
 
 all_ids = ARGV.find {|a| a =~ /^--id=\S+/}.to_s.split('=')[1].to_s.split(',')
 basename= File.basename(__FILE__)
@@ -26,7 +27,8 @@ $stderr.puts "--method=#{method}" if verbose
 $stderr.puts "--id=#{all_ids.inspect}" if verbose
 
 all_ids.each do |id|
-  cmd = "curl -X #{method} '#{url}/notification/#{id}' | jsonpp"
+  cmd = "curl -X #{method} '#{url}/notification/#{id}'"
+  cmd << ' | jsonpp' if jp
 
   $stderr.puts "--cmd=#{cmd}" if verbose
 

@@ -65,7 +65,6 @@ $(document).ready(function() {
       $.ajax({
         url: 'notification/' + deleted._id,
         type: 'DELETE',
-        contentType: 'application/json',
         dataType: 'json',
         success: function(data) {
           context.searchResult.collection = _.reject(context.searchResult.collection, function (doc) {
@@ -121,8 +120,12 @@ $(document).ready(function() {
               dataType: 'json',
               success: function(data) {
                 var result;
-                if (data.status === 'found' || data.status == 'notfound') {
-                  context.searchResult.collection = data.result;
+                if (data.status === 'found' || data.status === 'notfound') {
+                  if (data.result) {
+                    context.searchResult.collection = data.result;
+                  } else {
+                    context.searchResult.collection = [];
+                  }
                   context.searchResult.render();
                   context.editor.set({});
                 }   

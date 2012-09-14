@@ -10,6 +10,7 @@ else
 end
 
 verbose = ARGV.find {|a| a == '--verbose' or a == '-v' }
+jp = ARGV.find {|a| a == '--jsonpp' or a == '-jp' }
 
 data = ARGV.find {|a| a =~ /^--data=\S+$/}.to_s.split('=')[1]
 
@@ -21,7 +22,8 @@ end
 
 $stderr.puts("--data=#{data}") if verbose
 
-cmd = "curl -X POST -H 'Content-Type: application/json' -d @#{data} #{url}/notification | jsonpp"
+cmd = "curl -X POST -H 'Content-Type: application/json' -d @#{data} #{url}/notification"
+cmd << ' | jsonpp' if jp
 
 $stderr.puts("--cmd=#{cmd}") if verbose
 

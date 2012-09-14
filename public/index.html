@@ -39,26 +39,29 @@
 </head>
 <body>
 
-<div id="top" style="margin-bottom: 20px">
-  <div id="search_label" style="float: left; width: 210px; top: 10px;">
-    <h2 style="margin-top: 0px; margin-bottom: 10px; margin-left: 60px;">Search</h2>
+<div id="app">
+  <div id="top" style="margin-bottom: 20px">
+    <div id="search_label" style="float: left; width: 210px; top: 10px;">
+      <h2 style="margin-top: 0px; margin-bottom: 10px; margin-left: 60px;">Search</h2>
+    </div>
+    <div id="search_box_container" style="float: left; width: 800px; top: 10px;">
+    </div>
   </div>
-  <div id="search_box_container" style="float: left; width: 800px; top: 10px;">
+  <div id="action" style="clear: both; border-top-style:solid; border-bottom-style: solid; border-width: 1px; border-color: lightgray; padding-top: 5px; padding-bottom: 5px;">
+    <button id="button_save" style="position: relative; left: 210px;">Save</button>
+    <button id="button_add" style="position: relative; left: 210px;">Add</button>
+    <button id="button_delete" style="position: relative; left: 210px;">Delete</button>
+  </div>
+  <div id="bottom" style="padding-top: 10px; border-style: solid; border-width: 0px;">
+    <div id="search_result" style="float: left; width: 210px; margin-left: 5px;">
+    &nbsp;
+    </div>
+    <div id="content" style="float: left; width: 1000px; margin-left: 0px;">
+      <div id="jsoneditor" style="clear: both; width: 800px; height: 400px;"></div>
+      <div id="status" style="width: 800px; margin-top: 5px; padding-top: 5px; padding-bottom: 5px; border-top-style:solid; border-bottom-style: solid; border-width: 1px; border-color: lightgray;">&nbsp;</div>
+    </div>
   </div>
 </div>
-<div id="action" style="clear: both; border-top-style:solid; border-bottom-style: solid; border-width: 1px; border-color: lightgray; padding-top: 5px; padding-bottom: 5px;">
-  <button id="button_save" style="position: relative; left: 210px;">Save</button>
-  <button id="button_add" style="position: relative; left: 210px;">Add</button>
-  <button id="button_delete" style="position: relative; left: 210px;">Delete</button>
-</div>
-<div id="bottom" style="padding-top: 10px; border-style: solid; border-width: 0px;">
-  <div id="search_result" style="float: left; width: 210px; margin-left: 5px;">
-  &nbsp;
-  </div>
-  <div id="content" style="float: left; width: 1000px; margin-left: 0px;">
-    <div id="jsoneditor" style="clear: both; width: 800px; height: 400px;"></div>
-    <div id="status" style="width: 800px; margin-top: 5px; padding-top: 5px; padding-bottom: 5px; border-top-style:solid; border-bottom-style: solid; border-width: 1px; border-color: lightgray;">&nbsp;</div>
-  </div>
-</div>
+
 </body>
 </html>

@@ -9,15 +9,15 @@ $(document).ready(function() {
       this.collection = [];
     },
     updateEditor: function (event){
-      var context = this;
       event.preventDefault();
       $.ajax({
          url: $(event.target).attr('href'),
          type: 'GET',
          dataType: 'json',
+         context: this,
          success: function(data) {
            if(data.status === 'found')
-             context.editor.set(data.result);
+             this.editor.set(data.result);
            $('#status').html("Retrieve: <b>" + data.status + "</b>");
          }
       });
@@ -61,25 +61,24 @@ $(document).ready(function() {
     },
     deleteDoc: function (event) {
       var deleted = this.editor.get();
-      var context = this;
       $.ajax({
         url: 'notification/' + deleted._id,
         type: 'DELETE',
         dataType: 'json',
+        context: this,
         success: function(data) {
-          context.searchResult.collection = _.reject(context.searchResult.collection, function (doc) {
+          this.searchResult.collection = _.reject(this.searchResult.collection, function (doc) {
             return (doc._id === deleted._id);
           });
-          context.searchResult.render();
+          this.searchResult.render();
 
           $('#status').html("Delete: <b>" + data.status + "</b>");
-          context.editor.set({});
+          this.editor.set({});
         }
       });
     },
     addDoc: function (event) {
       var edited = this.editor.get();
-      var context = this;
       delete edited._id;
       $.ajax({
         url: 'notification',
@@ -87,13 +86,14 @@ $(document).ready(function() {
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify(edited),
+        context: this,
         success: function(data) {
           var added;
           if( data.status === 'ok' ){
             added = data.result[0];
-            context.searchResult.collection.unshift(added);
-            context.searchResult.render();
-            context.editor.set(added);
+            this.searchResult.collection.unshift(added);
+            this.searchResult.render();
+            this.editor.set(added);
           }
           $('#status').html("Add: <b>" + data.status + "</b>");
         }

@@ -35,8 +35,10 @@ $(document).ready(function() {
     }
   });
 
-  var App = Backbone.View.extend({
-    el: $('#app'),
+  var AppView = Backbone.View.extend({
+    id: "app",
+    tagName: "div",
+    template: _.template($('#app_template').html()),
 
     events: {
       "click #button_save": "saveDoc",
@@ -45,11 +47,15 @@ $(document).ready(function() {
     },
     initialize: function () {
       this.collection = [];
-      this.editor = new JSONEditor($('#jsoneditor').get(0));
-      this.initVisualSearch(this);
+      this.jsonEditor = new JSONEditor(this.make('div', {'id': 'json_editor'}));
+      this.searchBox =  new VS.VisualSearch(this.searchBoxOptions(this)).searchBox;
+
+      $("#app_container").html(this.render().el);
+
+      this.searchBox.setQuery("");
     },
     saveDoc: function (event) {
-      var edited = this.editor.get();
+      var edited = this.jsonEditor.get();
       $.ajax({
         url: 'notification/' + edited._id,
         type: 'PUT',
@@ -62,7 +68,7 @@ $(document).ready(function() {
       });
     },
     deleteDoc: function (event) {
-      var deleted = this.editor.get();
+      var deleted = this.jsonEditor.get();
       $.ajax({
         url: 'notification/' + deleted._id,
         type: 'DELETE',
@@ -72,15 +78,15 @@ $(document).ready(function() {
           this.collection = _.reject(this.collection, function (doc) {
             return (doc._id === deleted._id);
           });
-          $('#sidebar').html(new SearchResult(this.editor, this.collection).render().el);
+          $('#sidebar').html(new SearchResult(this.jsonEditor, this.collection).render().el);
 
           $('#status').html("Delete: <b>" + data.status + "</b>");
-          this.editor.set({});
+          this.jsonEditor.set({});
         }
       });
     },
     addDoc: function (event) {
-      var edited = this.editor.get();
+      var edited = this.jsonEditor.get();
       delete edited._id;
       $.ajax({
         url: 'notification',
@@ -94,16 +100,15 @@ $(document).ready(function() {
           if( data.status === 'ok' ){
             added = data.result[0];
             this.collection.unshift(added);
-            $('#sidebar').html(new SearchResult(this.editor, this.collection).render().el);
-            this.editor.set(added);
+            $('#sidebar').html(new SearchResult(this.jsonEditor, this.collection).render().el);
+            this.jsonEditor.set(added);
           }
           $('#status').html("Add: <b>" + data.status + "</b>");
         }
       });
     },
-    initVisualSearch: function (app) {
-      VS.init({
-        container  : $('#search_box'),
+    searchBoxOptions: function (app) { 
+      return {
         query      : '',
         unquotable : [
           'name',
@@ -126,8 +131,8 @@ $(document).ready(function() {
                   } else {
                     app.collection = [];
                   }
-                  $('#sidebar').html(new SearchResult(app.editor, app.collection).render().el);
-                  app.editor.set({});
+                  $('#sidebar').html(new SearchResult(app.jsonEditor, app.collection).render().el);
+                  app.jsonEditor.set({});
                 }   
                 $('#status').html('Search: <b>' + data.status + '</b>');
               }   
@@ -149,10 +154,15 @@ $(document).ready(function() {
             ]);
           }
         }
-      });
+      };  
     },
-    render: function () {}
+    render: function () {
+      $(this.el).html(this.template());
+      this.$('#search_box').html(this.searchBox.render().el);
+      this.$('#json_editor').html(this.jsonEditor.container);
+      return this;
+    }
   });
 
-  var app = new App;
+  var appView = new AppView;
 });

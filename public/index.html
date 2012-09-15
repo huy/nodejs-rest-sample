@@ -39,30 +39,32 @@
 
 </head>
 <body>
+  <div id="app_container">
+  </div>
 
-<div id="app">
-  <div id="top">
-    <div id="search_label">
-      <h2>Search</h2>
+  <script type="text/template" id="app_template">
+    <div id="top">
+      <div id="search_label">
+        <h2>Search</h2>
+      </div>
+      <div id="search_box">
+      </div>
     </div>
-    <div id="search_box">
+    <div id="action">
+      <button id="button_save">Save</button>
+      <button id="button_add">Add</button>
+      <button id="button_delete">Delete</button>
     </div>
-  </div>
-  <div id="action">
-    <button id="button_save">Save</button>
-    <button id="button_add">Add</button>
-    <button id="button_delete">Delete</button>
-  </div>
-  <div id="main"">
-    <div id="sidebar">
-    &nbsp;
+    <div id="main"">
+      <div id="sidebar">
+      &nbsp;
+      </div>
+      <div id="content">
+        <div id="json_editor"></div>
+        <div id="status">&nbsp;</div>
+      </div>
     </div>
-    <div id="content">
-      <div id="jsoneditor"></div>
-      <div id="status">&nbsp;</div>
-    </div>
-  </div>
-</div>
+  </script>
 
 </body>
 </html>

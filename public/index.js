@@ -48,11 +48,60 @@ $(document).ready(function() {
     initialize: function () {
       this.collection = [];
       this.jsonEditor = new JSONEditor(this.make('div', {'id': 'json_editor'}));
-      this.searchBox =  new VS.VisualSearch(this.searchBoxOptions(this)).searchBox;
+
+      searchCallbacks = {
+        facetMatches: function(callback) {
+          callback([
+            'name', 'desc', 'a', 'b',
+          ]);
+        },
+        valueMatches: function(category, searchTerm, callback) {
+          switch (category) {
+            case 'a':
+              callback(['100', '200']);
+              break;
+            case 'b':
+              callback(['world', 'hello world']);
+              break;
+          }
+        },
+        search: _.bind(function(query, searchCollection) {
+          var filter = searchCollection.map(function (facet) {
+            return facet.get('category') + '=' + facet.get('value');}).join('&');
+          $.ajax({
+            url: 'notification?' + filter,
+            type: 'GET',
+            dataType: 'json',
+            context: this,
+            success: function(data) {
+              var result;
+              if (data.status === 'found' || data.status === 'notfound') {
+                if (data.result) {
+                  this.collection = data.result;
+                } else {
+                  this.collection = [];
+                }
+                $('#sidebar').html(new SearchResult(this.jsonEditor, this.collection).render().el);
+                this.jsonEditor.set({});
+              }  
+              $('#status').html('Search: <b>' + data.status + '</b>');
+            }  
+          });
+        }, this)
+      };
+
+      this.searchBox = new VS.VisualSearch({
+        query: '',
+        unquotable: [
+          'name',
+          'desc',
+          'a'
+        ],
+        callbacks: searchCallbacks,
+      }).searchBox;
 
       $("#app_container").html(this.render().el);
 
-      this.searchBox.setQuery("");
     },
     saveDoc: function (event) {
       var edited = this.jsonEditor.get();
@@ -107,58 +156,10 @@ $(document).ready(function() {
         }
       });
     },
-    searchBoxOptions: function (app) { 
-      return {
-        query      : '',
-        unquotable : [
-          'name',
-          'desc',
-          'a'
-        ],
-        callbacks  : {
-          search : function(query, searchCollection) {
-            var filter = searchCollection.map(function (facet) { 
-              return facet.get('category') + '=' + facet.get('value');}).join('&');
-            $.ajax({
-              url: 'notification?' + filter,
-              type: 'GET',
-              dataType: 'json',
-              success: function(data) {
-                var result;
-                if (data.status === 'found' || data.status === 'notfound') {
-                  if (data.result) {
-                    app.collection = data.result;
-                  } else {
-                    app.collection = [];
-                  }
-                  $('#sidebar').html(new SearchResult(app.jsonEditor, app.collection).render().el);
-                  app.jsonEditor.set({});
-                }   
-                $('#status').html('Search: <b>' + data.status + '</b>');
-              }   
-            }); 
-          },  
-          valueMatches : function(category, searchTerm, callback) {
-            switch (category) {
-              case 'a':
-                callback(['100', '200']);
-                break;
-              case 'b':
-                callback(['world', 'hello world']);
-                break;
-            }
-          },
-          facetMatches : function(callback) {
-            callback([
-              'name', 'desc', 'a', 'b',
-            ]);
-          }
-        }
-      };  
-    },
     render: function () {
       $(this.el).html(this.template());
       this.$('#search_box').html(this.searchBox.render().el);
+      this.searchBox.renderFacets();
       this.$('#json_editor').html(this.jsonEditor.container);
       return this;
     }

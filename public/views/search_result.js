@@ -14,6 +14,13 @@ $(document).ready(function() {
       this.currentDoc = undefined;
 
       this.docList.bind('all', _.bind(this.render, this));
+      this.docList.bind('reset', _.bind(this.clearCurrentDoc, this));
+      this.docList.bind('destroy', _.bind(this.clearCurrentDoc, this));
+
+    },
+    clearCurrentDoc: function() {
+      this.currentDoc = undefined;
+      this.editor.clear();
     },
     isSaveRequired: function() {
       return this.currentDoc && !_.isEqual(this.currentDoc.toJSON(), this.editor.get());

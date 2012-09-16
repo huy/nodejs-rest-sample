@@ -16,13 +16,6 @@ $(document).ready(function() {
       this.jsonEditor = new JSONEditor(this.make('div', {'id': 'json_editor'}));
       this.searchResult = new Tetuan.views.SearchResult(this.jsonEditor);
 
-      resetSearchResult = _.bind(function() {
-        this.searchResult.currentDoc = undefined;
-        this.jsonEditor.clear();
-      }, this);
-
-      this.searchResult.docList.bind('reset', resetSearchResult);
-
       searchCallbacks = {
         facetMatches: function(callback) {
           callback([
@@ -80,8 +73,6 @@ $(document).ready(function() {
         return;
       }
       this.searchResult.currentDoc.destroy();
-      this.searchResult.currentDoc = undefined;
-      this.jsonEditor.clear();
     },
     addDoc: function (event) {
       var edited = this.jsonEditor.get();

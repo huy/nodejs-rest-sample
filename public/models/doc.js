@@ -2,13 +2,23 @@ $(document).ready(function() {
   if (!window.Tetuan) window.Tetuan = {};
   if (!Tetuan.models) Tetuan.models ={};
 
-  Tetuan.models.Doc = Backbone.View.extend({
-    idAttribute: "_id"
+  var Doc = Tetuan.models.Doc = Backbone.Model.extend({
+    idAttribute: "_id",
+    urlRoot: '/notification',
+    parse: function(response) {
+      return response.result;
+    }
   });
 
-  Tetuan.models.DocList = Backbone.Collection.extend({
-    model: Tetuan.models.Doc,
-    url: '/notfication'
+  var DocList = Tetuan.models.DocList = Backbone.Collection.extend({
+    model: Doc,
+    parse: function(response) {
+      if (response.status === 'found') {
+        return response.result;
+      } else {
+        return [];
+      }
+    }
   });
 
 });

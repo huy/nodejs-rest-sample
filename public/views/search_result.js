@@ -10,11 +10,13 @@ $(document).ready(function() {
     },
     initialize: function (editor) {
       this.editor = editor;
-      this.collection = [];
+      this.docList = new Tetuan.models.DocList;
       this.currentDoc = undefined;
+
+      this.docList.bind('all', _.bind(this.render, this));
     },
     isSaveRequired: function() {
-      return this.currentDoc && !_.isEqual(this.currentDoc, this.editor.get());
+      return this.currentDoc && !_.isEqual(this.currentDoc.toJSON(), this.editor.get());
     },
     updateEditor: function (event){
       event.preventDefault();
@@ -22,14 +24,14 @@ $(document).ready(function() {
         alert("save edited doc before moving to other");
         return;
       }
-      this.currentDoc = _.find(this.collection, function (doc) {
-        return (doc._id === $(event.target).text());
+      this.currentDoc = this.docList.find(function (doc) {
+        return (doc.id === $(event.target).text());
       });
-      this.editor.set(this.currentDoc);
+      this.editor.set(this.currentDoc.toJSON());
     },
     render: function () {
-      var result = _.map(this.collection, function (doc){
-        return '<a href="#" class="link_id">' + doc._id + '</a>';
+      var result = this.docList.map(function (doc){
+        return '<a href="#" class="link_id">' + doc.id + '</a>';
       }).join('<br/>'); 
       if (result){
         $(this.el).html(result);

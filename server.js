@@ -60,7 +60,7 @@ app.get('/notification', function (req, res) {
           if (items && items.length > 0) {
             res.json({status: "found", result: items});
           } else {
-            res.json({status: "notfound"});
+            res.json({status: "notfound", result: []});
           }
         }
       });
@@ -101,7 +101,7 @@ app.post('/notification', function (req, res) {
         conn.close();
 
         if (!err) {
-          res.json({status: 'ok', result : result});
+          res.json({status: 'ok', result : result[0]});
         } else {
           res.json({status: err});
         }
@@ -139,7 +139,7 @@ app.put('/notification/:id', function (req, res) {
             if (err) {
               res.json({status: err});
             } else {
-              res.json({status: "success", result: result});
+              res.json({status: "success", result: doc});
             }
             conn.close();
           });

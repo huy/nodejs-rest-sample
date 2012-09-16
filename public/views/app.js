@@ -16,6 +16,15 @@ $(document).ready(function() {
       this.jsonEditor = new JSONEditor(this.make('div', {'id': 'json_editor'}));
       this.searchResult = new Tetuan.views.SearchResult(this.jsonEditor);
 
+      resetSearchResult = _.bind(function() {
+        this.searchResult.currentDoc = undefined;
+        $(this.searchResult.el).detach(); // this will result in faster screen update
+        this.$('#sidebar').html(this.searchResult.render().el);
+        this.jsonEditor.clear();
+      }, this);
+
+      this.searchResult.docList.bind('reset', resetSearchResult);
+
       searchCallbacks = {
         facetMatches: function(callback) {
           callback([
@@ -40,30 +49,8 @@ $(document).ready(function() {
             alert("save edited doc before searching");
             return;
           }
-         
-          $.ajax({
-            url: 'notification?' + filter,
-            type: 'GET',
-            dataType: 'json',
-            context: this,
-            success: function(data) {
-              var result;
-              if (data.status === 'found' || data.status === 'notfound') {
-                if (data.result) {
-                  this.searchResult.collection = data.result;
-                } else {
-                  this.searchResult.collection = [];
-                }
-                this.searchResult.currentDoc = undefined;
 
-                $(this.searchResult.el).detach(); // this will result in faster screen update
-                this.$('#sidebar').html(this.searchResult.render().el);
-
-                this.jsonEditor.clear();
-              }  
-              $('#status').html('Search: <b>' + data.status + '</b>');
-            }  
-          });
+          this.searchResult.docList.fetch({url:'/notification?' + filter});
         }, this)
       };
 
@@ -86,67 +73,27 @@ $(document).ready(function() {
         return;
       }
       var edited = this.jsonEditor.get();
-      $.ajax({
-        url: 'notification/' + edited._id,
-        type: 'PUT',
-        contentType: 'application/json',
-        context: this,
-        dataType: 'json',
-        data: JSON.stringify(edited),
-        success: function(data) {
-          var currentIndex = _.indexOf(this.searchResult.collection, 
-            this.searchResult.currentDoc);
-          this.searchResult.collection[currentIndex] = edited;
-          this.searchResult.currentDoc = edited;
-          $('#status').html("Save: <b>" + data.status + "</b>");
-        }
-      });
+      this.searchResult.currentDoc.set(edited);
+      this.searchResult.currentDoc.save();
     },
     deleteDoc: function (event) {
       if (!this.searchResult.currentDoc) {
         alert("nothing to delete");
         return;
       }
-      $.ajax({
-        url: 'notification/' + this.searchResult.currentDoc._id,
-        type: 'DELETE',
-        dataType: 'json',
-        context: this,
-        success: function(data) {
-          this.searchResult.collection = _.reject(this.searchResult.collection, function (doc) {
-            return (doc._id === this.searchResult.currentDoc._id);
-          }, this);
-          this.searchResult.currentDoc = undefined;
-          this.searchResult.render();
-
-          $('#status').html("Delete: <b>" + data.status + "</b>");
-          this.jsonEditor.clear();
-        }
-      });
+      this.searchResult.currentDoc.destroy();
+      this.searchResult.currentDoc = undefined;
+      this.searchResult.render();
+      this.jsonEditor.clear();
     },
     addDoc: function (event) {
       var edited = this.jsonEditor.get();
       if (edited) {
         delete edited._id;
       }
-      $.ajax({
-        url: 'notification',
-        type: 'POST',
-        contentType: 'application/json',
-        dataType: 'json',
-        data: JSON.stringify(edited),
-        context: this,
-        success: function(data) {
-          var added;
-          if( data.status === 'ok' ){
-            added = data.result[0];
-            this.searchResult.collection.unshift(added);
-            this.searchResult.currentDoc = added;
-            this.jsonEditor.set(added);
-
-            this.searchResult.render();
-          }
-          $('#status').html("Add: <b>" + data.status + "</b>");
+      this.searchResult.docList.create(edited,{
+        success: function (doc) {
+          this.searchResult.currentDoc = doc;
         }
       });
     },

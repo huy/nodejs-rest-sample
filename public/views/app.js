@@ -1,7 +1,8 @@
 $(document).ready(function() {
   if (!window.Tetuan) window.Tetuan = {};
+  if (!Tetuan.views) Tetuan.views ={};
 
-  Tetuan.AppView = Backbone.View.extend({
+  Tetuan.views.App = Backbone.View.extend({
     id: "app",
     tagName: "div",
     template: _.template($('#app_template').html()),
@@ -13,7 +14,7 @@ $(document).ready(function() {
     },
     initialize: function () {
       this.jsonEditor = new JSONEditor(this.make('div', {'id': 'json_editor'}));
-      this.searchResult = new Tetuan.SearchResult(this.jsonEditor);
+      this.searchResult = new Tetuan.views.SearchResult(this.jsonEditor);
 
       searchCallbacks = {
         facetMatches: function(callback) {
@@ -80,6 +81,10 @@ $(document).ready(function() {
 
     },
     saveDoc: function (event) {
+      if (!this.searchResult.currentDoc) {
+        alert("nothing to save");
+        return;
+      }
       var edited = this.jsonEditor.get();
       $.ajax({
         url: 'notification/' + edited._id,
@@ -89,26 +94,28 @@ $(document).ready(function() {
         dataType: 'json',
         data: JSON.stringify(edited),
         success: function(data) {
+          var currentIndex = _.indexOf(this.searchResult.collection, 
+            this.searchResult.currentDoc);
+          this.searchResult.collection[currentIndex] = edited;
           this.searchResult.currentDoc = edited;
           $('#status').html("Save: <b>" + data.status + "</b>");
         }
       });
     },
     deleteDoc: function (event) {
-      var deleted = this.jsonEditor.get();
-      if (!deleted) {
+      if (!this.searchResult.currentDoc) {
         alert("nothing to delete");
         return;
       }
       $.ajax({
-        url: 'notification/' + deleted._id,
+        url: 'notification/' + this.searchResult.currentDoc._id,
         type: 'DELETE',
         dataType: 'json',
         context: this,
         success: function(data) {
           this.searchResult.collection = _.reject(this.searchResult.collection, function (doc) {
-            return (doc._id === deleted._id);
-          });
+            return (doc._id === this.searchResult.currentDoc._id);
+          }, this);
           this.searchResult.currentDoc = undefined;
           this.searchResult.render();
 
@@ -119,7 +126,9 @@ $(document).ready(function() {
     },
     addDoc: function (event) {
       var edited = this.jsonEditor.get();
-      delete edited._id;
+      if (edited) {
+        delete edited._id;
+      }
       $.ajax({
         url: 'notification',
         type: 'POST',

@@ -1,7 +1,8 @@
 $(document).ready(function() {
   if (!window.Tetuan) window.Tetuan = {};
+  if (!Tetuan.views) Tetuan.views ={};
 
-  Tetuan.SearchResult = Backbone.View.extend({
+  Tetuan.views.SearchResult = Backbone.View.extend({
     id: "search_result",
     tagName: "div",
     events: {
@@ -11,7 +12,6 @@ $(document).ready(function() {
       this.editor = editor;
       this.collection = [];
       this.currentDoc = undefined;
-     
     },
     isSaveRequired: function() {
       return this.currentDoc && !_.isEqual(this.currentDoc, this.editor.get());
@@ -22,19 +22,10 @@ $(document).ready(function() {
         alert("save edited doc before moving to other");
         return;
       }
-      $.ajax({
-         url: '/notification/' + $(event.target).text(),
-         type: 'GET',
-         dataType: 'json',
-         context: this,
-         success: function(data) {
-           if(data.status === 'found') {
-             this.currentDoc = data.result;
-             this.editor.set(data.result);
-           }
-           $('#status').html("Retrieve: <b>" + data.status + "</b>");
-         }
+      this.currentDoc = _.find(this.collection, function (doc) {
+        return (doc._id === $(event.target).text());
       });
+      this.editor.set(this.currentDoc);
     },
     render: function () {
       var result = _.map(this.collection, function (doc){

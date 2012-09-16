@@ -1,3 +1,3 @@
 $(document).ready(function() {
-  var appView = new Tetuan.AppView;
+  var app = new Tetuan.views.App;
 });

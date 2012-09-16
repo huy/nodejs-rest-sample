@@ -5,30 +5,42 @@ $(document).ready(function() {
     events: {
       "click a.link_id": "updateEditor"
     },
-    initialize: function (editor, collection) {
+    initialize: function (editor) {
       this.editor = editor;
-      this.collection = collection;
+      this.collection = [];
+      this.currentDoc = undefined;
+     
+    },
+    isSaveRequired: function() {
+      return this.currentDoc && !_.isEqual(this.currentDoc, this.editor.get());
     },
     updateEditor: function (event){
       event.preventDefault();
+      if (this.isSaveRequired()) {
+        alert("save edited doc before moving to other");
+        return;
+      }
       $.ajax({
-         url: $(event.target).attr('href'),
+         url: '/notification/' + $(event.target).text(),
          type: 'GET',
          dataType: 'json',
          context: this,
          success: function(data) {
-           if(data.status === 'found')
+           if(data.status === 'found') {
+             this.currentDoc = data.result;
              this.editor.set(data.result);
+           }
            $('#status').html("Retrieve: <b>" + data.status + "</b>");
          }
       });
     },
     render: function () {
       var result = _.map(this.collection, function (doc){
-        return '<a href="/notification/' + doc._id + '" class="link_id">' + doc._id + '</a>';
+        return '<a href="#" class="link_id">' + doc._id + '</a>';
       }).join('<br/>'); 
-      if (result)
+      if (result){
         $(this.el).html(result);
+      }
       else
         $(this.el).html('&nbsp;');
       return this;
@@ -46,8 +58,8 @@ $(document).ready(function() {
       "click #button_add": "addDoc"
     },
     initialize: function () {
-      this.collection = [];
       this.jsonEditor = new JSONEditor(this.make('div', {'id': 'json_editor'}));
+      this.searchResult = new SearchResult(this.jsonEditor);
 
       searchCallbacks = {
         facetMatches: function(callback) {
@@ -68,6 +80,12 @@ $(document).ready(function() {
         search: _.bind(function(query, searchCollection) {
           var filter = searchCollection.map(function (facet) {
             return facet.get('category') + '=' + facet.get('value');}).join('&');
+
+          if (this.searchResult.isSaveRequired()){
+            alert("save edited doc before searching");
+            return;
+          }
+         
           $.ajax({
             url: 'notification?' + filter,
             type: 'GET',
@@ -77,12 +95,16 @@ $(document).ready(function() {
               var result;
               if (data.status === 'found' || data.status === 'notfound') {
                 if (data.result) {
-                  this.collection = data.result;
+                  this.searchResult.collection = data.result;
                 } else {
-                  this.collection = [];
+                  this.searchResult.collection = [];
                 }
-                $('#sidebar').html(new SearchResult(this.jsonEditor, this.collection).render().el);
-                this.jsonEditor.set({});
+                this.searchResult.currentDoc = undefined;
+
+                $(this.searchResult.el).detach(); // this will result in faster screen update
+                this.$('#sidebar').html(this.searchResult.render().el);
+
+                this.jsonEditor.clear();
               }  
               $('#status').html('Search: <b>' + data.status + '</b>');
             }  
@@ -109,9 +131,11 @@ $(document).ready(function() {
         url: 'notification/' + edited._id,
         type: 'PUT',
         contentType: 'application/json',
+        context: this,
         dataType: 'json',
         data: JSON.stringify(edited),
         success: function(data) {
+          this.searchResult.currentDoc = edited;
           $('#status').html("Save: <b>" + data.status + "</b>");
         }
       });
@@ -124,13 +148,14 @@ $(document).ready(function() {
         dataType: 'json',
         context: this,
         success: function(data) {
-          this.collection = _.reject(this.collection, function (doc) {
+          this.searchResult.collection = _.reject(this.searchResult.collection, function (doc) {
             return (doc._id === deleted._id);
           });
-          $('#sidebar').html(new SearchResult(this.jsonEditor, this.collection).render().el);
+          this.searchResult.currentDoc = undefined;
+          this.searchResult.render();
 
           $('#status').html("Delete: <b>" + data.status + "</b>");
-          this.jsonEditor.set({});
+          this.jsonEditor.clear();
         }
       });
     },
@@ -148,9 +173,11 @@ $(document).ready(function() {
           var added;
           if( data.status === 'ok' ){
             added = data.result[0];
-            this.collection.unshift(added);
-            $('#sidebar').html(new SearchResult(this.jsonEditor, this.collection).render().el);
+            this.searchResult.collection.unshift(added);
+            this.searchResult.currentDoc = added;
             this.jsonEditor.set(added);
+
+            this.searchResult.render();
           }
           $('#status').html("Add: <b>" + data.status + "</b>");
         }
@@ -158,6 +185,7 @@ $(document).ready(function() {
     },
     render: function () {
       $(this.el).html(this.template());
+      this.$('#sidebar').html(this.searchResult.render().el);
       this.$('#search_box').html(this.searchBox.render().el);
       this.searchBox.renderFacets();
       this.$('#json_editor').html(this.jsonEditor.container);

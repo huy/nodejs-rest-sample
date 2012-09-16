@@ -18,8 +18,6 @@ $(document).ready(function() {
 
       resetSearchResult = _.bind(function() {
         this.searchResult.currentDoc = undefined;
-        $(this.searchResult.el).detach(); // this will result in faster screen update
-        this.$('#sidebar').html(this.searchResult.render().el);
         this.jsonEditor.clear();
       }, this);
 
@@ -83,7 +81,6 @@ $(document).ready(function() {
       }
       this.searchResult.currentDoc.destroy();
       this.searchResult.currentDoc = undefined;
-      this.searchResult.render();
       this.jsonEditor.clear();
     },
     addDoc: function (event) {
@@ -92,9 +89,10 @@ $(document).ready(function() {
         delete edited._id;
       }
       this.searchResult.docList.create(edited,{
-        success: function (doc) {
+        success: _.bind(function (doc) {
           this.searchResult.currentDoc = doc;
-        }
+          this.searchResult.editor.set(doc.toJSON());
+        }, this)
       });
     },
     render: function () {

@@ -41,7 +41,12 @@ $(document).ready(function() {
             return;
           }
 
-          this.searchResult.docList.fetch({url:'/notification?' + filter});
+          this.searchResult.docList.fetch({
+            url:'/notification?' + filter,
+            success: function (collection, resp) {
+              $('#status').html('fetch: ' + resp.status);
+            }
+          });
         }, this)
       };
 
@@ -64,26 +69,31 @@ $(document).ready(function() {
         return;
       }
       var edited = this.jsonEditor.get();
-      this.searchResult.currentDoc.set(edited);
-      this.searchResult.currentDoc.save();
+      this.searchResult.currentDoc.save(edited, {
+        success: function (model, resp) {
+          $('#status').html('save: ' + resp.status);
+        }
+      });
     },
     deleteDoc: function (event) {
       if (!this.searchResult.currentDoc) {
         alert("nothing to delete");
         return;
       }
-      this.searchResult.currentDoc.destroy();
+      this.searchResult.currentDoc.destroy({
+        success: function (model, resp) {
+          $('#status').html('delete: ' + resp.status);
+        }
+      });
     },
     addDoc: function (event) {
-      var edited = this.jsonEditor.get();
-      if (edited) {
-        delete edited._id;
-      }
-      this.searchResult.docList.create(edited,{
-        success: _.bind(function (doc) {
-          this.searchResult.currentDoc = doc;
-          this.searchResult.editor.set(doc.toJSON());
-        }, this)
+      var edited = this.jsonEditor.get() || {};
+      delete edited._id;
+
+      this.searchResult.docList.create(edited, {
+        success: function (model, resp) {
+          $('#status').html('add: ' + resp.status);
+        }
       });
     },
     render: function () {

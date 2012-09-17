@@ -97,6 +97,7 @@ app.post('/notification', function (req, res) {
     conn.collection('doc', function (err, collection) {
       collection.insert(req.body, {safe: true}, function (err, result) {
 
+        log("insert to doc returns", err);
         log("insert to doc returns", result);
         conn.close();
 

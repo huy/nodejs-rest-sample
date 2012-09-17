@@ -16,11 +16,16 @@ $(document).ready(function() {
       this.docList.bind('all', _.bind(this.render, this));
       this.docList.bind('reset', _.bind(this.clearCurrentDoc, this));
       this.docList.bind('destroy', _.bind(this.clearCurrentDoc, this));
+      this.docList.bind('add', _.bind(this.setCurrentDoc, this));
 
     },
-    clearCurrentDoc: function() {
+    clearCurrentDoc: function(list) {
       this.currentDoc = undefined;
       this.editor.clear();
+    },
+    setCurrentDoc: function(doc) {
+      this.currentDoc = doc;
+      this.editor.set(doc.toJSON());
     },
     isSaveRequired: function() {
       return this.currentDoc && !_.isEqual(this.currentDoc.toJSON(), this.editor.get());

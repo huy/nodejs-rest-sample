@@ -30,6 +30,14 @@ div#action {
   padding-bottom: 5px;
 }
 
+div#action button {
+  border-width: 1px;
+  border-color: #97B0F8;
+  outline: none;
+  padding: 5px;
+  background: #D5DDF6;
+}
+
 button#button_save {
   position: relative; 
   left: 210px;
@@ -65,6 +73,16 @@ div#content {
 
 div#search_result {
   clear: both; 
+}
+
+div#search_result p {
+  margin-top: 0px; 
+  padding-top: 0px; 
+}
+
+div#search_result a {
+  margin-bottom: 0px; 
+  padding-bottom: 0px; 
 }
 
 div#json_editor {

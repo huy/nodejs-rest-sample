@@ -1,5 +1,47 @@
 {
-"id": 1,
-"a" : 100,
-"b" : "hello"
+  "name": "H2O+",
+  "brand" : "Night Oasis Overnight Moisture Lock",
+  "variants" : [],
+  "type": "Face masks",
+  "intendeduse": "",
+  "presentation": "",
+  "colours" : [],
+  "manufacture": {
+    "name": "H2O+",
+    "address": "845 West Madison Street, Chicago, Illinois, 60607",
+    "country": "US",
+    "tel": "312-850-9283",
+    "fax": "312-633-1406"
+  },
+  "assembler": {
+    "name": "",
+    "country": "",
+    "tel": "",
+    "fax": ""
+  },
+  "localDistributor": {
+    "name": "Cong ty Thuong Mai Thoi Trang Huyen Thoai",
+    "address": "Phong 1401B, Tang 14, Toa Nha Centec Tower, so 72-74 Nguyen Thi Minh Khai, Phuong 6, Quan 3, TP Ho Chi Minh",
+    "tel": "(08) 6299 4223",
+    "fax": "(08) 6299 4113",
+    "registerNo": "0311560318",
+    "representative" : {
+      "name": "Le Quan Bao Long",
+      "tel": "(08) 6299 4223",
+      "fax": "(08) 6299 4113",
+      "designation": "Giam Doc"  
+    }   
+  },
+  "importer": {
+    "name": "Cong ty Thuong Mai Thoi Trang Huyen Thoai",
+    "address": "Phong 1401B, Tang 14, Toa Nha Centec Tower, so 72-74 Nguyen Thi Minh Khai, Phuong 6, Quan 3, TP Ho Chi Minh",
+    "tel": "(08) 6299 4223",
+    "fax": "(08) 6299 4113"
+  },
+  "spec": {
+    "Benzophenone-4": 0.500,
+    "Phenoxyethanol": 0.807940,
+    "Potassium Sorbate": 0.000500,
+    "Diazolidinyl Urea": 0.999686
+  }
 }

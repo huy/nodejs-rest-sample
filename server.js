@@ -25,15 +25,19 @@ function log(message, obj) {
 var db = require('db');
 
 function createFilter(query) {
-  var acceptedFields = {'name': _.identity,
-        'desc': _.identity,
-        'a': parseInt,
-        'b': _.identity},
+  function like(val) {
+    return new RegExp(val,'i');
+  }
+  var acceptedFields = {'name': ['name',_.identity],
+        'type': 'type',
+        'manufacture': ['manufacture.name',_.identity],
+        'localDistributor': ['localDistributor.name', like],
+        'localRepresentative': ['localDistributor.representative.name', like]},
     filter = {};
 
-  _.each(acceptedFields, function (v, k) {
-    if (typeof query[k] !== 'undefined') {
-      filter[k] = v(query[k]);
+  _.each(acceptedFields, function (translator, field) {
+    if (typeof query[field] !== 'undefined') {
+      filter[translator[0]] = translator[1](query[field]);
     }
   });
   return filter;

@@ -37,13 +37,19 @@ $(document).ready(function() {
         return;
       }
       this.currentDoc = this.docList.find(function (doc) {
-        return (doc.id === $(event.target).text());
+        return (doc.id === $(event.target).data('id'));
       });
       this.editor.set(this.currentDoc.toJSON());
     },
     render: function () {
       var result = this.docList.map(function (doc){
-        return '<a href="#" class="link_id">' + doc.id + '</a>';
+        return '<a href="#" class="link_id" data-id="' + 
+          doc.id + '">' + 
+          doc.get('name') + 
+          '</a>' +
+          '<p>' +
+          doc.get('brand')+
+          '</p>';
       }).join('<br/>'); 
       if (result){
         $(this.el).html(result);

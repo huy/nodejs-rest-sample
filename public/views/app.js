@@ -19,16 +19,21 @@ $(document).ready(function() {
       searchCallbacks = {
         facetMatches: function(callback) {
           callback([
-            'name', 'desc', 'a', 'b',
+            'name',
+            'type',
+            'manufacture',
+            'localDistributor',
+            'localRepresentative',
+            'text'
           ]);
         },
         valueMatches: function(category, searchTerm, callback) {
           switch (category) {
-            case 'a':
-              callback(['100', '200']);
+            case 'name':
+              callback(['H2O+']);
               break;
-            case 'b':
-              callback(['world', 'hello world']);
+            case 'type':
+              callback(['Face masks']);
               break;
           }
         },
@@ -53,9 +58,7 @@ $(document).ready(function() {
       this.searchBox = new VS.VisualSearch({
         query: '',
         unquotable: [
-          'name',
-          'desc',
-          'a'
+          'name'
         ],
         callbacks: searchCallbacks,
       }).searchBox;

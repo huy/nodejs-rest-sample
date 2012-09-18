@@ -21,4 +21,14 @@ $(document).ready(function() {
     }
   });
 
+  Tetuan.models.searchableFields = [
+    'name',
+    'brand',
+    'type',
+    'manufacture',
+    'localDistributor',
+    'localRepresentative',
+    'text'
+  ]
+
 });

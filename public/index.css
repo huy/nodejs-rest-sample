@@ -8,10 +8,10 @@ div#search_label {
   top: 10px;
 }
 
-div#search_label h2 {
+div#search_label h3 {
   margin-top: 0px; 
   margin-bottom: 10px; 
-  margin-left: 60px;
+  margin-left: 30px;
 }
 
 div#search_box {
@@ -30,27 +30,16 @@ div#action {
   padding-bottom: 5px;
 }
 
+div#action_positioned {
+  position: relative; 
+  left: 210px;
+}
 div#action button {
   border-width: 1px;
   border-color: #97B0F8;
   outline: none;
   padding: 5px;
   background: #D5DDF6;
-}
-
-button#button_save {
-  position: relative; 
-  left: 210px;
-}
-
-button#button_add {
-  position: relative; 
-  left: 210px;
-}
-
-button#button_delete {
-  position: relative; 
-  left: 210px;
 }
 
 div#main {
@@ -67,8 +56,20 @@ div#sidebar {
 
 div#content {
   float: left; 
-  width: 1000px; 
+  width: 820px; 
   margin-left: 0px;
+}
+
+div#hint {
+  float: left; 
+  margin-left: 0px;
+}
+
+div#hint ol {
+  margin-top: 0px;
+  padding-top: 0px;
+  font-size: 15px;
+  //font-style: italic;
 }
 
 div#search_result {
@@ -78,6 +79,9 @@ div#search_result {
 div#search_result p {
   margin-top: 0px; 
   padding-top: 0px; 
+  margin-bottom: 0px; 
+  padding-bottom: 0px; 
+  font-size: 85%;
 }
 
 div#search_result a {
@@ -86,7 +90,6 @@ div#search_result a {
 }
 
 div#json_editor {
-  clear: both; 
   width: 800px; 
   height: 400px;
 }

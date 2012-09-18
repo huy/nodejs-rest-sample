@@ -13,19 +13,15 @@ $(document).ready(function() {
       "click #button_add": "addDoc"
     },
     initialize: function () {
-      this.jsonEditor = new JSONEditor(this.make('div', {'id': 'json_editor'}));
+      this.jsonEditor = new JSONEditor(
+        this.make('div', {'id': 'json_editor'}),
+        {enableSearch: false}
+       );
       this.searchResult = new Tetuan.views.SearchResult(this.jsonEditor);
 
       searchCallbacks = {
         facetMatches: function(callback) {
-          callback([
-            'name',
-            'type',
-            'manufacture',
-            'localDistributor',
-            'localRepresentative',
-            'text'
-          ]);
+          callback(Tetuan.models.searchableFields);
         },
         valueMatches: function(category, searchTerm, callback) {
           switch (category) {
@@ -39,7 +35,8 @@ $(document).ready(function() {
         },
         search: _.bind(function(query, searchCollection) {
           var filter = searchCollection.map(function (facet) {
-            return facet.get('category') + '=' + facet.get('value');}).join('&');
+              return facet.get('category') + '=' + encodeURIComponent(facet.get('value'));
+            }).join('&');
 
           if (this.searchResult.isSaveRequired()){
             alert("save edited doc before searching");

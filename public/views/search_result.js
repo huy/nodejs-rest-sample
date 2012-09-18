@@ -40,17 +40,23 @@ $(document).ready(function() {
         return (doc.id === $(event.target).data('id'));
       });
       this.editor.set(this.currentDoc.toJSON());
+      this.render();
     },
     render: function () {
       var result = this.docList.map(function (doc){
+        var bgColor = 'white';
+        if (this.currentDoc && doc.id === this.currentDoc.id){
+          bgColor = '#D5DDF6';
+        }
+           
         return '<a href="#" class="link_id" data-id="' + 
-          doc.id + '">' + 
+          doc.id + '" style="background:' + bgColor + ';">' + 
           doc.get('name') + 
           '</a>' +
           '<p>' +
           doc.get('brand')+
           '</p>';
-      }).join('<br/>'); 
+      }, this).join(''); 
       if (result){
         $(this.el).html(result);
       }

@@ -29,7 +29,8 @@ function createFilter(query) {
     return new RegExp(val,'i');
   }
   var acceptedFields = {'name': ['name',_.identity],
-        'type': 'type',
+        'type': ['type', _.identity],
+        'brand': ['brand', like],
         'manufacture': ['manufacture.name',_.identity],
         'localDistributor': ['localDistributor.name', like],
         'localRepresentative': ['localDistributor.representative.name', like]},
@@ -37,7 +38,7 @@ function createFilter(query) {
 
   _.each(acceptedFields, function (translator, field) {
     if (typeof query[field] !== 'undefined') {
-      filter[translator[0]] = translator[1](query[field]);
+      filter[translator[0] || field] = translator[1] ? translator[1](query[field]) : query[field];
     }
   });
   return filter;
